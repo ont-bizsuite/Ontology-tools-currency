@@ -85,7 +85,10 @@
         >
         </el-table-column>
         <el-table-column prop="address" label="Address"> </el-table-column>
-        <el-table-column prop="amount" label="Amount" width="180">
+        <el-table-column prop="amount" label="Amount" width="240">
+          <template slot-scope="scope">
+            {{ scope.row.amount }}
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -157,7 +160,6 @@ export default {
         isPri: false
       },
       currentPage: 1, // 当前页码
-      // total: 10, // 总条数
       pageSize: 10 // 每页的数据条数
     }
   },
@@ -199,6 +201,9 @@ export default {
             }
             that.billList.push(sheetData)
           }
+          that.billList.map(value => {
+            value.amount = that.getFullNum(value.amount)
+          })
           // this.$refs.upload.value = ''
         } catch (e) {
           return false
@@ -280,6 +285,19 @@ export default {
       } else {
         return text
       }
+    },
+    getFullNum(num) {
+      //处理非数字
+      if (isNaN(num)) {
+        return num
+      }
+      //处理不需要转换的数字
+      var str = '' + num
+      if (!/e/i.test(str)) {
+        return num
+      }
+
+      return num.toFixed(18).replace(/\.?0+$/, '')
     }
   },
   mounted() {
