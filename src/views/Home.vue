@@ -32,7 +32,7 @@
           </el-radio-group>
         </el-form-item>
 
-        <div v-if="showF.isWallet">
+        <!-- <div v-if="showF.isWallet">
           <p class="select_names">钱包文件(.dat)</p>
           <p style="margin-top: 10px;">
             <el-button size="small" @click="selectFn">选择文件</el-button>
@@ -49,7 +49,7 @@
         </div>
         <el-form-item v-if="showF.isPassword" label="钱包密码" prop="passowrd">
           <el-input type="password" v-model="ruleForm.passowrd"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item
           v-if="showF.isContAdd"
           label="合约地址"
@@ -57,9 +57,9 @@
         >
           <el-input v-model="ruleForm.contractAddress"></el-input>
         </el-form-item>
-        <el-form-item v-if="showF.isPri" label="私钥" prop="privateKey">
+        <!-- <el-form-item v-if="showF.isPri" label="私钥" prop="privateKey">
           <el-input type="privateKey" v-model="ruleForm.privateKey"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')"
             >立即创建</el-button
@@ -229,14 +229,14 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.tokenType !== 'ERC20') {
-            if (!this.ruleForm.wallet) {
-              return this.$message({
-                type: 'error',
-                message: '请上传一个钱包文件（.dat）!'
-              })
-            }
-          }
+          // if (this.tokenType !== 'ERC20') {
+          //   if (!this.ruleForm.wallet) {
+          //     return this.$message({
+          //       type: 'error',
+          //       message: '请上传一个钱包文件（.dat）!'
+          //     })
+          //   }
+          // }
           console.log(' submit!!')
           console.log(this.dataParams)
         } else {
@@ -294,7 +294,7 @@ export default {
       //处理不需要转换的数字
       var str = '' + num
       if (!/e/i.test(str)) {
-        return num
+        return num + ''
       }
 
       return num.toFixed(18).replace(/\.?0+$/, '')
