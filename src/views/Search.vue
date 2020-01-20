@@ -53,6 +53,7 @@
         "
         border
         style="width: 100%"
+        id="outTable"
       >
         <el-table-column prop="date" label="日期" width="180">
         </el-table-column>
@@ -89,6 +90,10 @@
   </div>
 </template>
 <script>
+// import { export2Excel } from '../common/js/util'
+import XLSX from 'xlsx'
+import FileSaver from 'file-saver'
+import { export_json_to_excel } from '../assets/js/Export2Excel'
 export default {
   data() {
     return {
@@ -139,73 +144,103 @@ export default {
           date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄',
-          status: 0
+          status: 0,
+          logs: '11111'
         },
         {
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
-          status: 1
+          status: 1,
+          logs: '11111'
         },
         {
           date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄',
-          status: 2
+          status: 2,
+          logs: '11111'
         },
         {
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄',
-          status: 3
+          status: 3,
+          logs: '11111'
         },
         {
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
-          status: 1
+          status: 1,
+          logs: '11111'
         },
         {
           date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄',
-          status: 2
+          status: 2,
+          logs: '11111'
         },
         {
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
-          status: 1
+          status: 1,
+          logs: '11111'
         },
         {
           date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄',
-          status: 2
+          status: 2,
+          logs: '11111'
         },
         {
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄',
-          status: 3
+          status: 3,
+          logs: '11111'
         },
         {
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
-          status: 1
+          status: 1,
+          logs: '11111'
         },
         {
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄',
-          status: 3
+          status: 3,
+          logs: '11111'
         },
         {
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
-          status: 1
+          status: 1,
+          logs: '11111'
+        }
+      ],
+      culumns: [
+        {
+          title: 'date',
+          key: 'date'
+        },
+        {
+          title: 'name',
+          key: 'name'
+        },
+        {
+          title: 'address',
+          key: 'address'
+        },
+        {
+          title: 'status',
+          key: 'status'
         }
       ]
     }
@@ -250,18 +285,39 @@ export default {
     },
     exportToExcel() {
       //excel数据导出
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('../assets/js/Export2Excel')
-        const tHeader = ['date', 'name', 'address', 'status']
-        const filterVal = ['date', 'address', 'address', 'status']
-        const list = this.tableData
-        const data = this.formatJson(filterVal, list)
-        export_json_to_excel(tHeader, data, '列表excel')
-      })
+      const tHeader = ['date', 'name', 'address', 'status']
+      const filterVal = ['date', 'address', 'address', 'status']
+      const list = this.tableData
+      const data = this.formatJson(filterVal, list)
+      export_json_to_excel(tHeader, data, '列表excel')
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    exportData() {
+      export2Excel(this.culumns, this.tableData)
     }
+    // exportExcel() {
+    //   var xlsxParam = { raw: true } //转换成excel时，使用原始的格式
+    //   var wb = XLSX.utils.table_to_book(
+    //     document.querySelector('#outTable'),
+    //     xlsxParam
+    //   )
+    //   var wbout = XLSX.write(wb, {
+    //     bookType: 'xlsx',
+    //     bookSST: true,
+    //     type: 'array'
+    //   })
+    //   try {
+    //     FileSaver.saveAs(
+    //       new Blob([wbout], { type: 'application/octet-stream;charset=utf-8' }),
+    //       'sheetjs.xlsx'
+    //     )
+    //   } catch (e) {
+    //     if (typeof console !== 'undefined') console.log(e, wbout)
+    //   }
+    //   return wbout
+    // }
   },
   mounted() {
     if (this.formInline.status) {

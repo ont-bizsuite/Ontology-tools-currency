@@ -1,8 +1,11 @@
 /* eslint-disable */
-require('script-loader!file-saver')
+// require('script-loader!file-saver')
 // require('script-loader!src/vendor/Blob');
-require('script-loader!../../assets/js/Blob')
-require('script-loader!xlsx/dist/xlsx.core.min')
+// require('script-loader!../../assets/js/Blob')
+// require('script-loader!xlsx/dist/xlsx.core.min')
+import XLSX from 'xlsx'
+
+import 'file-saver'
 
 function generateArray(table) {
   var out = []
