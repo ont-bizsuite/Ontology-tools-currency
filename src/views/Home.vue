@@ -14,19 +14,23 @@
         style="display: none;"
       />
     </div>
-    {{ totalAmount }}
+    <!-- {{ totalAmount }} -->
     <div class="from_area">
       <el-form
         :model="ruleForm"
         :rules="rules"
         ref="ruleForm"
-        label-width="100px"
+        label-width="120px"
         class="demo-ruleForm"
       >
+        <el-form-item label="创建事件标题" prop="eventType">
+          <el-input type="eventType" v-model="ruleForm.eventType"></el-input>
+        </el-form-item>
         <el-form-item label="币种">
           <el-radio-group v-model="tokenType">
-            <el-radio label="ONG">ONG</el-radio>
             <el-radio label="ONT">ONT</el-radio>
+
+            <el-radio label="ONG">ONG</el-radio>
             <el-radio label="ERC20">ERC20</el-radio>
             <el-radio label="OEP4">OEP4</el-radio>
           </el-radio-group>
@@ -46,10 +50,8 @@
             @change="selectDat"
             style="display: none"
           />
-        </div>
-        <el-form-item v-if="showF.isPassword" label="钱包密码" prop="passowrd">
-          <el-input type="password" v-model="ruleForm.passowrd"></el-input>
-        </el-form-item> -->
+        </div> -->
+
         <el-form-item
           v-if="showF.isContAdd"
           label="合约地址"
@@ -68,8 +70,30 @@
         </el-form-item> -->
       </el-form>
     </div>
+    <div style="margin-bottom: 20px">
+      <el-button @click="submitForm('ruleForm')" type="primary"
+        >上传数据</el-button
+      >
+    </div>
     <p class="tips">注意：请仔细核对数据后，再开始转账</p>
+    <div class="select_wrap">
+      <el-select
+        v-model="historyAction"
+        placeholder="选择历史事件"
+        @change="handlerSelect(historyAction)"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
     <div class="table_wrap">
+      <p>总额：</p>
+      <p>预估手续费：</p>
       <el-table
         :data="
           billList.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -101,7 +125,7 @@
       >
       </el-pagination>
     </div>
-    <div>
+    <div v-if="accountAddress">
       <el-button @click="submitForm('ruleForm')" type="primary"
         >开始转账</el-button
       >
@@ -124,9 +148,10 @@ export default {
         passowrd: '',
         contractAddress: '',
         privateKey: '',
-        wallet: ''
+        wallet: '',
+        eventType: ''
       },
-      tokenType: 'ONG',
+      tokenType: 'ONT',
       rules: {
         passowrd: [
           {
@@ -151,6 +176,16 @@ export default {
             message: '请输入私钥',
             trigger: 'change'
           }
+        ],
+        eventType: [
+          {
+            min: 2,
+            max: 18,
+            pattern: /^[\S]{2,18}$/,
+            required: true,
+            message: '长度为2～18个字符，且不能有空格!',
+            trigger: 'change'
+          }
         ]
       },
       walletFileName: '',
@@ -162,7 +197,31 @@ export default {
       },
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
-      totalAmount: 0
+      totalAmount: 0,
+      accountAddress: '',
+      options: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        },
+        {
+          value: '选项2',
+          label: '双皮奶'
+        },
+        {
+          value: '选项3',
+          label: '蚵仔煎'
+        },
+        {
+          value: '选项4',
+          label: '龙须面'
+        },
+        {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      historyAction: ''
     }
   },
   methods: {
@@ -305,6 +364,9 @@ export default {
       }
 
       return num.toFixed(18).replace(/\.?0+$/, '')
+    },
+    handlerSelect(event) {
+      console.log(event)
     }
   },
   mounted() {
@@ -368,7 +430,11 @@ export default {
   .table_wrap {
     width: 800px;
     // margin: 0 auto;
-    margin-top: 50px;
+    margin-top: 20px;
+    p {
+      font-size: 14px;
+      line-height: 24px;
+    }
   }
   .el-pagination {
     margin: 50px;
@@ -388,6 +454,9 @@ export default {
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 10px;
+  }
+  .select_wrap {
+    margin-top: 50px;
   }
 }
 </style>
