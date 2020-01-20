@@ -14,7 +14,7 @@
         style="display: none;"
       />
     </div>
-
+    {{ totalAmount }}
     <div class="from_area">
       <el-form
         :model="ruleForm"
@@ -112,6 +112,7 @@
 <script>
 // @ is an alias to /src
 import XLSX from 'xlsx'
+import { BigNumber } from 'bignumber.js'
 
 export default {
   name: 'home',
@@ -160,7 +161,8 @@ export default {
         isPri: false
       },
       currentPage: 1, // 当前页码
-      pageSize: 10 // 每页的数据条数
+      pageSize: 10, // 每页的数据条数
+      totalAmount: 0
     }
   },
   methods: {
@@ -201,9 +203,14 @@ export default {
             }
             that.billList.push(sheetData)
           }
+          let nnn = 0
           that.billList.map(value => {
             value.amount = that.getFullNum(value.amount)
+            // that.totalAmount += Number(value.amount)
+            nnn = new BigNumber(value.amount).plus(nnn).toString()
           })
+          console.log(nnn)
+          that.totalAmount = nnn
           // this.$refs.upload.value = ''
         } catch (e) {
           return false
