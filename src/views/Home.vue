@@ -1,87 +1,97 @@
 <template>
   <div class="home">
-    <div class="select_excel">
-      <p>Excel文件 (.xsl,.xlsx)</p>
-      <p style="margin-top: 10px;">
-        <el-button @click="clickFns" size="small">选择文件</el-button>
-      </p>
-      <p class="file_name">{{ fileName }}</p>
-      <input
-        type="file"
-        ref="upload"
-        accept=".xls,.xlsx"
-        class="outputlist_upload"
-        style="display: none;"
-      />
+    <div class="top_wrap">
+      <div class="left">
+        <div class="select_excel">
+          <p>Excel文件 (.xsl,.xlsx)</p>
+          <p style="margin-top: 10px;">
+            <el-button @click="clickFns" size="small">导入文件</el-button>
+          </p>
+          <p class="file_name">{{ fileName }}</p>
+          <input
+            type="file"
+            ref="upload"
+            accept=".xls,.xlsx"
+            class="outputlist_upload"
+            style="display: none;"
+          />
+        </div>
+        <div class="from_area">
+          <el-form
+            :model="ruleForm"
+            :rules="rules"
+            ref="ruleForm"
+            label-width="120px"
+            class="demo-ruleForm"
+          >
+            <el-form-item label="事件名称" prop="eventType">
+              <el-input
+                type="eventType"
+                v-model="ruleForm.eventType"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="币种">
+              <el-radio-group v-model="tokenType">
+                <el-radio label="ONT">ONT</el-radio>
+                <el-radio label="ONG">ONG</el-radio>
+                <el-radio label="ERC20">ERC20</el-radio>
+                <el-radio label="OEP4">OEP4</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              v-if="showF.isContAdd"
+              label="合约地址"
+              prop="contractAddress"
+            >
+              <el-input v-model="ruleForm.contractAddress"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div style="margin-bottom: 20px">
+          <el-button
+            @click="submitForm('ruleForm')"
+            type="primary"
+            :loading="upLoading"
+            >上传数据</el-button
+          >
+        </div>
+      </div>
+      <div class="right">
+        <div class="select_wrap">
+          <el-select
+            v-model="historyAction"
+            placeholder="选择历史事件名称"
+            @change="handlerSelect(historyAction)"
+          >
+            <el-option
+              v-for="(item, index) in options"
+              :key="index"
+              :label="item"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <p>总额：{{ TotalSum }}</p>
+        <p>预估手续费：{{ EstimateFee }}</p>
+        <p>钱包地址：{{ accountAddress }}</p>
+        <p>发放笔数：{{ tableData.length }}</p>
+        <p style="margin-bottom: 20px;">
+          地址余额：{{ Balance }}
+          <el-button
+            style="margin-left: 50px;"
+            :loading="balanceLoading"
+            @click="getBalance()"
+            size="small"
+            >刷新余额</el-button
+          >
+        </p>
+      </div>
     </div>
-    <!-- {{ totalAmount }} -->
-    <div class="from_area">
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="转账说明" prop="eventType">
-          <el-input type="eventType" v-model="ruleForm.eventType"></el-input>
-        </el-form-item>
-        <el-form-item label="币种">
-          <el-radio-group v-model="tokenType">
-            <el-radio label="ONT">ONT</el-radio>
-            <el-radio label="ONG">ONG</el-radio>
-            <el-radio label="ERC20">ERC20</el-radio>
-            <el-radio label="OEP4">OEP4</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item
-          v-if="showF.isContAdd"
-          label="合约地址"
-          prop="contractAddress"
-        >
-          <el-input v-model="ruleForm.contractAddress"></el-input>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div style="margin-bottom: 20px">
-      <el-button
-        @click="submitForm('ruleForm')"
-        type="primary"
-        :loading="upLoading"
-        >上传数据</el-button
-      >
-    </div>
-    <p class="tips">注意：请仔细核对数据后，再开始转账</p>
-    <div class="select_wrap">
-      <el-select
-        v-model="historyAction"
-        placeholder="选择历史转账说明"
-        @change="handlerSelect(historyAction)"
-      >
-        <el-option
-          v-for="(item, index) in options"
-          :key="index"
-          :label="item"
-          :value="item"
-        >
-        </el-option>
-      </el-select>
-    </div>
-    <div class="table_wrap">
-      <p>总额：{{ TotalSum }}</p>
-      <p>预估手续费：{{ EstimateFee }}</p>
-      <p>钱包地址：{{ accountAddress }}</p>
-      <p style="margin-bottom: 20px;">
-        地址余额：{{ Balance }}
-        <el-button
-          style="margin-left: 50px;"
-          :loading="balanceLoading"
-          @click="getBalance()"
-          size="small"
-          >刷新余额</el-button
-        >
-      </p>
 
+    <p class="tips">注意：请仔细核对数据后，再开始转账</p>
+
+    <div class="table_wrap">
       <el-table
         :data="
           tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -273,10 +283,10 @@ export default {
           if (this.options.includes(this.ruleForm.eventType)) {
             return this.$message({
               type: 'error',
-              message: '检测到有重复转账说明，请重新输入！'
+              message: '检测到有重复事件名称，请重新输入！'
             })
           }
-          // this.upLoading = true
+          this.upLoading = true
           console.log(this.dataParams)
           // return
           return this.sendExcel()
@@ -414,7 +424,7 @@ export default {
       if (!this.accountAddress) {
         return this.$message({
           type: 'error',
-          message: '选择一个转账说明!'
+          message: '选择一个事件名称!'
         })
       }
       this.balanceLoading = true
@@ -436,8 +446,11 @@ export default {
     }
   },
   mounted() {
-    this.$refs.upload.addEventListener('change', e => {
-      this.readExcel(e)
+    this.$refs.upload.addEventListener('change', async e => {
+      console.log(1)
+      await this.readExcel(e)
+      this.$refs.upload.value = ''
+      console.log(2)
     })
     this.getEventType()
   },
@@ -489,6 +502,24 @@ export default {
 <style lang="less" scoped>
 .home {
   padding-top: 20px;
+  .top_wrap {
+    display: flex;
+    justify-content: space-between;
+    .left,
+    .right {
+      width: 100%;
+      max-width: 600px;
+    }
+    .right {
+      .select_wrap {
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 24px;
+      }
+    }
+  }
   .file_name {
     height: 20px;
     font-size: 14px;
@@ -499,10 +530,6 @@ export default {
     width: 800px;
     // margin: 0 auto;
     margin-top: 20px;
-    p {
-      font-size: 14px;
-      line-height: 24px;
-    }
   }
   .el-pagination {
     margin: 50px;

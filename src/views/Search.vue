@@ -9,14 +9,16 @@
         class="demo-ruleForm"
       >
         <el-form-item label="转账说明" prop="eventType">
-          <el-checkbox-group v-model="ruleForm.eventType">
-            <el-checkbox
-              v-for="(item, index) in eventTypeList"
-              :key="index"
-              :label="item"
-              name="eventType"
-            ></el-checkbox>
-          </el-checkbox-group>
+          <div style="padding-left: 100px; width: 100%; max-width: 900px;">
+            <el-checkbox-group v-model="ruleForm.eventType">
+              <el-checkbox
+                v-for="(item, index) in eventTypeList"
+                :key="index"
+                :label="item"
+                name="eventType"
+              ></el-checkbox>
+            </el-checkbox-group>
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -33,15 +35,17 @@
       <div class="search_select">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="转账状态">
-            <el-select v-model="formInline.status" placeholder="状态列表">
-              <el-option label="所有状态" :value="6"></el-option>
-              <el-option label="构建失败" :value="0"></el-option>
-              <el-option label="未发送" :value="1"></el-option>
-              <el-option label="发送失败" :value="2"></el-option>
-              <el-option label="发送成功" :value="3"></el-option>
-              <el-option label="交易失败" :value="4"></el-option>
-              <el-option label="交易成功" :value="5"></el-option>
-            </el-select>
+            <div>
+              <el-select v-model="formInline.status" placeholder="状态列表">
+                <el-option label="所有状态" :value="6"></el-option>
+                <el-option label="构建失败" :value="0"></el-option>
+                <el-option label="未发送" :value="1"></el-option>
+                <el-option label="发送失败" :value="2"></el-option>
+                <el-option label="发送成功" :value="3"></el-option>
+                <el-option label="交易失败" :value="4"></el-option>
+                <el-option label="交易成功" :value="5"></el-option>
+              </el-select>
+            </div>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">筛选</el-button>
