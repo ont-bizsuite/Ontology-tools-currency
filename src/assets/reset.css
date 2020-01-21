@@ -135,7 +135,7 @@ a {
   text-decoration: none;
   -webkit-backface-visibility: hidden;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
@@ -152,7 +152,7 @@ a {
   width: 5px;
   background-color: rgba(125, 125, 125, 0.7);
   -webkit-border-radius: 6px;
-}
+} */
 html,
 body {
   width: 100%;

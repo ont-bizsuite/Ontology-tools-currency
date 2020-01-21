@@ -15,10 +15,15 @@ const routes = [
     name: 'search',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/Search.vue')
+  },
+  {
+    path: '*',
+    redirect: '/'
   }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

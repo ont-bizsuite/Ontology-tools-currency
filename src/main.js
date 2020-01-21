@@ -7,6 +7,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/reset.css'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+// http api
+import * as http from '@/api/role'
+Vue.prototype.$http = http
 
 new Vue({
   router,

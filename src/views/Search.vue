@@ -8,19 +8,21 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="事件类型" prop="eventType">
+        <el-form-item label="转账说明" prop="eventType">
           <el-checkbox-group v-model="ruleForm.eventType">
             <el-checkbox
-              label="美食/餐厅线上活动"
+              v-for="(item, index) in eventTypeList"
+              :key="index"
+              :label="item"
               name="eventType"
             ></el-checkbox>
-            <el-checkbox label="地推活动" name="eventType"></el-checkbox>
-            <el-checkbox label="线下主题活动" name="eventType"></el-checkbox>
-            <el-checkbox label="单纯品牌曝光" name="eventType"></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')"
+          <el-button
+            :loading="seLoading"
+            type="primary"
+            @click="submitForm('ruleForm')"
             >立即查询</el-button
           >
           <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
@@ -32,10 +34,13 @@
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="转账状态">
             <el-select v-model="formInline.status" placeholder="状态列表">
-              <el-option label="所有状态" :value="3"></el-option>
-              <el-option label="转账成功" :value="1"></el-option>
-              <el-option label="转账失败" :value="0"></el-option>
-              <el-option label="转账中" :value="2"></el-option>
+              <el-option label="所有状态" :value="6"></el-option>
+              <el-option label="构建失败" :value="0"></el-option>
+              <el-option label="未发送" :value="1"></el-option>
+              <el-option label="发送失败" :value="2"></el-option>
+              <el-option label="发送成功" :value="3"></el-option>
+              <el-option label="交易失败" :value="4"></el-option>
+              <el-option label="交易成功" :value="5"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -55,25 +60,66 @@
         style="width: 100%"
         id="outTable"
       >
-        <el-table-column prop="date" label="日期" width="180">
+        <el-table-column fixed prop="EventType" label="事件类型" width="180">
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="180">
+        <el-table-column prop="TokenType" label="Token 类型" width="180">
         </el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column align="center" prop="status" width="160" label="状态">
+        <el-table-column
+          prop="Address"
+          label="Address"
+          width="320"
+        ></el-table-column>
+        <el-table-column
+          prop="Amount"
+          label="Amount"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          prop="TxHash"
+          label="TxHash"
+          width="320"
+        ></el-table-column>
+        <el-table-column
+          prop="TxTime"
+          label="交易时间"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="TxResult"
+          width="160"
+          label="状态"
+          fixed="right"
+        >
           <template slot-scope="scope">
             <el-tag
-              type="success"
+              type="info"
               disable-transitions
-              v-if="scope.row.status === 1"
-              >转账成功</el-tag
+              v-if="scope.row.TxResult === 1"
+              >未发送</el-tag
             >
             <el-tag
-              v-else-if="scope.row.status === 2"
-              type="primary"
+              v-else-if="scope.row.TxResult === 2"
+              type="warning"
               disable-transitions
-              >转账中</el-tag
-            ><el-tag v-else type="danger" disable-transitions>转账失败</el-tag>
+              >发送失败</el-tag
+            >
+            <el-tag v-else-if="scope.row.TxResult === 3" disable-transitions
+              >发送成功</el-tag
+            >
+            <el-tag
+              v-else-if="scope.row.TxResult === 4"
+              type="danger"
+              disable-transitions
+              >交易失败</el-tag
+            >
+            <el-tag
+              v-else-if="scope.row.TxResult === 5"
+              type="success"
+              disable-transitions
+              >交易成功</el-tag
+            >
+            <el-tag v-else type="danger" disable-transitions>构建失败</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -94,6 +140,7 @@
 import XLSX from 'xlsx'
 import FileSaver from 'file-saver'
 import { export_json_to_excel } from '../assets/js/Export2Excel'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -112,119 +159,13 @@ export default {
           }
         ]
       },
+      eventTypeList: [],
       tableData: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       value: '',
       formInline: {
         status: ''
       },
-      originData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          status: 0,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          status: 1,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          status: 2,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          status: 3,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          status: 1,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          status: 2,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          status: 1,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          status: 2,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          status: 3,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          status: 1,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          status: 3,
-          logs: '11111'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          status: 1,
-          logs: '11111'
-        }
-      ],
+      originData: [],
       culumns: [
         {
           title: 'date',
@@ -242,14 +183,15 @@ export default {
           title: 'status',
           key: 'status'
         }
-      ]
+      ],
+      seLoading: false
     }
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('submit!')
+          this.searchHistory()
         } else {
           console.log('error submit!!')
           return false
@@ -258,7 +200,7 @@ export default {
     },
     onSubmit() {
       console.log('submit!')
-      if (this.formInline.status === 3) {
+      if (this.formInline.status === 6) {
         this.tableData = this.originData
       } else {
         this.tableData = this.fliterStatus(
@@ -285,49 +227,112 @@ export default {
     },
     exportToExcel() {
       //excel数据导出
-      const tHeader = ['date', 'name', 'address', 'status']
-      const filterVal = ['date', 'address', 'address', 'status']
-      const list = this.tableData
-      const data = this.formatJson(filterVal, list)
-      export_json_to_excel(tHeader, data, '列表excel')
+      const tHeader = [
+        '事件类型',
+        'Token 类型',
+        'address',
+        'amount',
+        'TxHash',
+        '交易时间',
+        '状态',
+        '日志'
+      ]
+      const filterVal = [
+        'EventType',
+        'TokenType',
+        'Address',
+        'Amount',
+        'TxHash',
+        'TxTime',
+        'TxResult',
+        'ErrorDetail'
+      ]
+      this.excelData.map((item, index) => {
+        let str = ''
+        switch (item.TxResult) {
+          case 1:
+            str = '未发送'
+            break
+          case 2:
+            str = '发送失败'
+            break
+          case 3:
+            str = '发送成功'
+            break
+          case 4:
+            str = '交易失败'
+            break
+          case 5:
+            str = '交易成功'
+            break
+          default:
+            str = '构建失败'
+            break
+        }
+        item.TxResult = str
+      })
+      // console.log(list)
+      const data = this.formatJson(filterVal, this.excelData)
+      export_json_to_excel(tHeader, data, moment().format('X'))
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
     exportData() {
       export2Excel(this.culumns, this.tableData)
+    },
+    async getEventType() {
+      let apires = await this.$http.getEventType()
+      console.log(apires)
+      this.eventTypeList = [...apires.Result]
+    },
+    async searchHistory() {
+      this.tableData = []
+      let params = {
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'getdatabyeventtype',
+        params: {
+          eventType: [...this.ruleForm.eventType]
+        }
+      }
+      this.seLoading = true
+      let apires = await this.$http.getHistory(params)
+      console.log(apires)
+      this.seLoading = false
+      let arr = []
+      apires.Result.map((item, index) => {
+        arr.push(...item.TxInfo)
+      })
+      arr.map((item, index) => {
+        item.TxTime = moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
+      })
+      this.originData = [...arr]
+      this.tableData = [...this.originData]
+      this.formInline.status = ''
+      // if (this.formInline.status === 0 || this.formInline.status) {
+      //   console.log(111)
+      //   this.tableData = this.fliterStatus(
+      //     this.originData,
+      //     this.formInline.status
+      //   )
+      // } else {
+      //   this.tableData = this.originData
+      // }
+      this.currentPage = 1
     }
-    // exportExcel() {
-    //   var xlsxParam = { raw: true } //转换成excel时，使用原始的格式
-    //   var wb = XLSX.utils.table_to_book(
-    //     document.querySelector('#outTable'),
-    //     xlsxParam
-    //   )
-    //   var wbout = XLSX.write(wb, {
-    //     bookType: 'xlsx',
-    //     bookSST: true,
-    //     type: 'array'
-    //   })
-    //   try {
-    //     FileSaver.saveAs(
-    //       new Blob([wbout], { type: 'application/octet-stream;charset=utf-8' }),
-    //       'sheetjs.xlsx'
-    //     )
-    //   } catch (e) {
-    //     if (typeof console !== 'undefined') console.log(e, wbout)
-    //   }
-    //   return wbout
-    // }
+  },
+  computed: {
+    excelData() {
+      let arr = []
+      this.tableData.map((item, index) => {
+        arr.push({ ...item })
+      })
+      return [...arr]
+    }
   },
   mounted() {
-    if (this.formInline.status) {
-      this.tableData = this.fliterStatus(
-        this.originData,
-        this.formInline.status
-      )
-    } else {
-      this.tableData = this.originData
-    }
+    this.getEventType()
   }
 }
 </script>
