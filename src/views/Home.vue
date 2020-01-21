@@ -292,6 +292,7 @@ export default {
 
       this.upLoading = false
       if (apires.Error !== 1) {
+        let str = apires.Result || apires.Desc
         return this.$message.error(apires.Result)
       }
       const { BillList, EstimateFee, Admin, Sum, AdminBalance } = apires.Result
@@ -403,7 +404,7 @@ export default {
         })
       }
       this.$message({
-        type: 'error',
+        type: 'success',
         message: '已开始转账'
       })
     },

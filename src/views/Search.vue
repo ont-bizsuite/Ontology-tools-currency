@@ -287,6 +287,7 @@ export default {
       this.eventTypeList = [...apires.Result]
     },
     async searchHistory() {
+      this.tableData = []
       let params = {
         id: 1,
         jsonrpc: '2.0',
