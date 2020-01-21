@@ -457,10 +457,8 @@ export default {
   },
   mounted() {
     this.$refs.upload.addEventListener('change', async e => {
-      console.log(1)
       await this.readExcel(e)
       this.$refs.upload.value = ''
-      console.log(2)
     })
     this.getEventType()
   },
