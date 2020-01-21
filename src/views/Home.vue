@@ -2,20 +2,27 @@
   <div class="home">
     <div class="top_wrap">
       <div class="left">
-        <div class="select_excel">
-          <p>Excel文件 (.xsl,.xlsx)</p>
-          <p style="margin-top: 10px;">
-            <el-button @click="clickFns" size="small">导入文件</el-button>
-          </p>
-          <p class="file_name">{{ fileName }}</p>
-          <input
-            type="file"
-            ref="upload"
-            accept=".xls,.xlsx"
-            class="outputlist_upload"
-            style="display: none;"
-          />
+        <div class="top_select">
+          <div class="select_excel">
+            <p>Excel文件 (.xsl,.xlsx)</p>
+            <p style="margin-top: 10px;">
+              <el-button @click="clickFns" size="small">导入文件</el-button>
+            </p>
+            <p class="file_name">{{ fileName }}</p>
+            <input
+              type="file"
+              ref="upload"
+              accept=".xls,.xlsx"
+              class="outputlist_upload"
+              style="display: none;"
+            />
+          </div>
+          <div class="down_tep">
+            <!-- <a href="../assets/template.xlsx">下载模板</a> -->
+            <el-button @click="download">下载模板</el-button>
+          </div>
         </div>
+
         <div class="from_area">
           <el-form
             :model="ruleForm"
@@ -212,6 +219,9 @@ export default {
     }
   },
   methods: {
+    download() {
+      window.open('http://172.168.3.174/template.xlsx')
+    },
     clickFns() {
       this.$refs.upload.click()
     },
@@ -517,6 +527,15 @@ export default {
       p {
         font-size: 14px;
         line-height: 24px;
+      }
+    }
+    .left {
+      .top_select {
+        display: flex;
+        justify-content: space-between;
+        .select_excel {
+          width: 70%;
+        }
       }
     }
   }
