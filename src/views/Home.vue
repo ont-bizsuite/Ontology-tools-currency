@@ -109,7 +109,7 @@
         :current-page="currentPage"
         :page-size="10"
         layout="total, prev, pager, next"
-        :total="billList.length"
+        :total="tableData.length"
       >
       </el-pagination>
     </div>
@@ -276,7 +276,9 @@ export default {
               message: '检测到有重复转账说明，请重新输入！'
             })
           }
-          this.upLoading = true
+          // this.upLoading = true
+          console.log(this.dataParams)
+          // return
           return this.sendExcel()
         } else {
           console.log('error submit!!')
@@ -293,7 +295,7 @@ export default {
       this.upLoading = false
       if (apires.Error !== 1) {
         let str = apires.Result || apires.Desc
-        return this.$message.error(apires.Result)
+        return this.$message.error(str)
       }
       const { BillList, EstimateFee, Admin, Sum, AdminBalance } = apires.Result
       this.tableData = [...BillList]
