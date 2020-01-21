@@ -8,7 +8,7 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="转账说明" prop="eventType">
+        <el-form-item label="事件名称" prop="eventType">
           <div style="padding-left: 100px; width: 100%; max-width: 900px;">
             <el-checkbox-group v-model="ruleForm.eventType">
               <el-checkbox
@@ -309,7 +309,11 @@ export default {
         arr.push(...item.TxInfo)
       })
       arr.map((item, index) => {
-        item.TxTime = moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
+        if (item.TxTime !== 0) {
+          item.TxTime = moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
+        } else {
+          item.TxTime = ''
+        }
       })
       this.originData = [...arr]
       this.tableData = [...this.originData]
