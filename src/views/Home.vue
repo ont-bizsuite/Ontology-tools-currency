@@ -297,7 +297,7 @@ export default {
             })
           }
           this.upLoading = true
-          console.log(this.dataParams)
+          // console.log(this.dataParams)
           // return
           return this.sendExcel()
         } else {
@@ -380,7 +380,7 @@ export default {
       return num.toFixed(18).replace(/\.?0+$/, '')
     },
     async handlerSelect(event) {
-      console.log(event)
+      // console.log(event)
       if (event) {
         let params = {
           id: 1,

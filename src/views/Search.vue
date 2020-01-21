@@ -64,7 +64,7 @@
         style="width: 100%"
         id="outTable"
       >
-        <el-table-column fixed prop="EventType" label="事件类型" width="180">
+        <el-table-column fixed prop="EventType" label="事件名称" width="180">
         </el-table-column>
         <el-table-column prop="TokenType" label="Token 类型" width="180">
         </el-table-column>
@@ -158,7 +158,7 @@ export default {
           {
             type: 'array',
             required: true,
-            message: '请至少选择一个事件类型',
+            message: '请至少选择一个事件名称',
             trigger: 'change'
           }
         ]
@@ -232,7 +232,7 @@ export default {
     exportToExcel() {
       //excel数据导出
       const tHeader = [
-        '事件类型',
+        '事件名称',
         'Token 类型',
         'address',
         'amount',
@@ -287,7 +287,7 @@ export default {
     },
     async getEventType() {
       let apires = await this.$http.getEventType()
-      console.log(apires)
+      // console.log(apires)
       this.eventTypeList = [...apires.Result]
     },
     async searchHistory() {
@@ -302,7 +302,7 @@ export default {
       }
       this.seLoading = true
       let apires = await this.$http.getHistory(params)
-      console.log(apires)
+      // console.log(apires)
       this.seLoading = false
       let arr = []
       apires.Result.map((item, index) => {
@@ -314,15 +314,6 @@ export default {
       this.originData = [...arr]
       this.tableData = [...this.originData]
       this.formInline.status = ''
-      // if (this.formInline.status === 0 || this.formInline.status) {
-      //   console.log(111)
-      //   this.tableData = this.fliterStatus(
-      //     this.originData,
-      //     this.formInline.status
-      //   )
-      // } else {
-      //   this.tableData = this.originData
-      // }
       this.currentPage = 1
     }
   },
