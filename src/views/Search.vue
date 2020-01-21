@@ -211,7 +211,7 @@ export default {
       this.currentPage = 1
     },
     fliterStatus(arr, type) {
-      return arr.filter(item => item.status == type)
+      return arr.filter(item => item.TxResult == type)
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
