@@ -152,6 +152,7 @@
 <script>
 import { export_json_to_excel } from '../assets/js/Export2Excel'
 import moment from 'moment'
+import { mapState } from 'vuex'
 
 const actions = new Map([
   [1, ['构建交易失败']],
@@ -184,7 +185,6 @@ export default {
           }
         ]
       },
-      eventTypeList: [],
       tableData: [],
       formInline: {
         status: ''
@@ -198,14 +198,10 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.searchHistory()
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
     onSubmit() {
-      console.log('submit!')
       if (this.formInline.status === 6) {
         this.tableData = this.originData
       } else {
@@ -218,9 +214,6 @@ export default {
     },
     fliterStatus(arr, type) {
       return arr.filter(item => item.TxResult == type)
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -253,45 +246,26 @@ export default {
         'TxResult',
         'ErrorDetail'
       ]
-      this.excelData.map((item, index) => {
-        item.TxResult = filterAction(item.TxResult)
-      })
-      // console.log(list)
       const data = this.formatJson(filterVal, this.excelData)
       export_json_to_excel(tHeader, data, moment().format('X'))
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
-    async getEventType() {
-      let apires = await this.$http.getEventType()
-      // console.log(apires)
-      this.eventTypeList = [...apires.Result]
-    },
     async searchHistory() {
       this.tableData = []
-      let params = {
-        id: 1,
-        jsonrpc: '2.0',
-        method: 'getdatabyeventtype',
-        params: {
-          eventType: [...this.ruleForm.eventType]
-        }
-      }
       this.seLoading = true
-      let apires = await this.$http.getHistory(params)
-      // console.log(apires)
+      let apires = await this.$http.getHistory(this.dataParams)
       this.seLoading = false
       let arr = []
       apires.Result.map((item, index) => {
         arr.push(...item.TxInfo)
       })
       arr.map((item, index) => {
-        if (item.TxTime !== 0) {
-          item.TxTime = moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
-        } else {
-          item.TxTime = ''
-        }
+        item.TxTime =
+          item.TxTime !== 0
+            ? moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
+            : ''
       })
       this.originData = [...arr]
       this.tableData = [...this.originData]
@@ -300,16 +274,29 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      eventTypeList: state => state.eventTypeList
+    }),
     excelData() {
       let arr = []
       this.tableData.map((item, index) => {
         arr.push({ ...item })
       })
+      arr.map((item, index) => {
+        item.TxResult = filterAction(item.TxResult)
+      })
       return [...arr]
+    },
+    dataParams() {
+      return {
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'getdatabyeventtype',
+        params: {
+          eventType: [...this.ruleForm.eventType]
+        }
+      }
     }
-  },
-  mounted() {
-    this.getEventType()
   }
 }
 </script>
