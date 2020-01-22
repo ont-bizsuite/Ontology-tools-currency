@@ -356,6 +356,13 @@ export default {
       }
     },
     async handlerStart() {
+      if (this.TotalSum >= this.Balance) {
+        return this.$message({
+          type: 'error',
+          message: '地址余额小于总额！'
+        })
+      }
+
       let params = {
         id: 1,
         jsonrpc: '2.0',
