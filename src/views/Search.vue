@@ -257,6 +257,10 @@ export default {
       this.seLoading = true
       let apires = await this.$http.getHistory(this.dataParams)
       this.seLoading = false
+      if (apires.Error !== 1) {
+        let str = apires.Result || apires.Desc
+        return this.$message.error(str)
+      }
       let arr = []
       apires.Result.map((item, index) => {
         arr.push(...item.TxInfo)
