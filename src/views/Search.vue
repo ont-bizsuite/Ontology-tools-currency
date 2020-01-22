@@ -153,8 +153,8 @@ import moment from 'moment'
 export default {
   data() {
     return {
-      currentPage: 1, // 当前页码
-      pageSize: 10, // 每页的数据条数
+      currentPage: 1,
+      pageSize: 10,
       ruleForm: {
         eventType: []
       },
@@ -170,29 +170,10 @@ export default {
       },
       eventTypeList: [],
       tableData: [],
-      value: '',
       formInline: {
         status: ''
       },
       originData: [],
-      culumns: [
-        {
-          title: 'date',
-          key: 'date'
-        },
-        {
-          title: 'name',
-          key: 'name'
-        },
-        {
-          title: 'address',
-          key: 'address'
-        },
-        {
-          title: 'status',
-          key: 'status'
-        }
-      ],
       seLoading: false
     }
   },
@@ -286,9 +267,6 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
-    },
-    exportData() {
-      export2Excel(this.culumns, this.tableData)
     },
     async getEventType() {
       let apires = await this.$http.getEventType()

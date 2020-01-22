@@ -78,19 +78,44 @@
             </el-option>
           </el-select>
         </div>
-        <p>总额：{{ TotalSum }}</p>
-        <p>预估手续费：{{ EstimateFee }}</p>
-        <p>钱包地址：{{ accountAddress }}</p>
-        <p>发放笔数：{{ tableData.length }}</p>
+        <p>
+          <el-row>
+            <el-col :span="4">总额：</el-col>
+            <el-col :span="20">{{ TotalSum }}</el-col>
+          </el-row>
+        </p>
+        <p>
+          <el-row>
+            <el-col :span="4">预估手续费：</el-col>
+            <el-col :span="20">{{ EstimateFee }}</el-col>
+          </el-row>
+        </p>
+        <p>
+          <el-row>
+            <el-col :span="4">钱包地址：</el-col>
+            <el-col :span="20">{{ accountAddress }}</el-col>
+          </el-row>
+        </p>
+        <p>
+          <el-row>
+            <el-col :span="4">发放笔数：</el-col>
+            <el-col :span="20">{{ tableData.length }}</el-col>
+          </el-row>
+        </p>
         <p style="margin-bottom: 20px;">
-          地址余额：{{ Balance }}
-          <el-button
-            style="margin-left: 50px;"
-            :loading="balanceLoading"
-            @click="getBalance()"
-            size="small"
-            >刷新余额</el-button
-          >
+          <el-row>
+            <el-col :span="4">地址余额：</el-col>
+            <el-col :span="20"
+              >{{ Balance }}
+              <el-button
+                style="margin-left: 50px;"
+                :loading="balanceLoading"
+                @click="getBalance()"
+                size="small"
+                >刷新余额</el-button
+              ></el-col
+            >
+          </el-row>
         </p>
       </div>
     </div>
@@ -445,6 +470,7 @@ export default {
   .top_wrap {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     .left,
     .right {
       width: 100%;
@@ -460,6 +486,7 @@ export default {
       }
     }
     .left {
+      margin-right: 20px;
       .top_select {
         display: flex;
         justify-content: space-between;
@@ -498,9 +525,6 @@ export default {
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 10px;
-  }
-  .select_wrap {
-    margin-top: 50px;
   }
 }
 </style>
