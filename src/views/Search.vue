@@ -49,7 +49,7 @@
                 <el-option label="未构造交易" :value="0"></el-option>
                 <el-option label="构建交易失败" :value="1"></el-option>
                 <el-option label="发送失败" :value="2"></el-option>
-                <el-option label="发送成功" :value="3"></el-option>
+                <el-option label="转账进行中" :value="3"></el-option>
                 <el-option label="交易失败" :value="4"></el-option>
                 <el-option label="交易成功" :value="5"></el-option>
               </el-select>
@@ -117,7 +117,7 @@
               >发送失败</el-tag
             >
             <el-tag v-else-if="scope.row.TxResult === 3" disable-transitions
-              >发送成功</el-tag
+              >转账进行中</el-tag
             >
             <el-tag
               v-else-if="scope.row.TxResult === 4"
@@ -156,7 +156,7 @@ import moment from 'moment'
 const actions = new Map([
   [1, ['构建交易失败']],
   [2, ['发送失败']],
-  [3, ['发送成功']],
+  [3, ['转账进行中']],
   [4, ['交易失败']],
   [5, ['交易成功']],
   ['default', ['未构建交易']]
