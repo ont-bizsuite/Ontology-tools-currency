@@ -112,7 +112,7 @@
             >
             <el-tag
               v-else-if="scope.row.TxResult === 2"
-              type="warning"
+              type="danger"
               disable-transitions
               >发送失败</el-tag
             >
@@ -131,7 +131,9 @@
               disable-transitions
               >交易成功</el-tag
             >
-            <el-tag v-else type="danger" disable-transitions>未构造交易</el-tag>
+            <el-tag v-else type="warning" disable-transitions
+              >未构造交易</el-tag
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -150,6 +152,20 @@
 <script>
 import { export_json_to_excel } from '../assets/js/Export2Excel'
 import moment from 'moment'
+
+const actions = new Map([
+  [1, ['构建交易失败']],
+  [2, ['发送失败']],
+  [3, ['发送成功']],
+  [4, ['交易失败']],
+  [5, ['交易成功']],
+  ['default', ['未构建交易']]
+])
+const filterAction = status => {
+  let action = actions.get(status) || actions.get('default')
+  return action[0]
+}
+
 export default {
   data() {
     return {
@@ -238,28 +254,7 @@ export default {
         'ErrorDetail'
       ]
       this.excelData.map((item, index) => {
-        let str = ''
-        switch (item.TxResult) {
-          case 1:
-            str = '构建交易失败'
-            break
-          case 2:
-            str = '发送失败'
-            break
-          case 3:
-            str = '发送成功'
-            break
-          case 4:
-            str = '交易失败'
-            break
-          case 5:
-            str = '交易成功'
-            break
-          default:
-            str = '未构建交易'
-            break
-        }
-        item.TxResult = str
+        item.TxResult = filterAction(item.TxResult)
       })
       // console.log(list)
       const data = this.formatJson(filterVal, this.excelData)
