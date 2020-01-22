@@ -108,7 +108,7 @@
               type="info"
               disable-transitions
               v-if="scope.row.TxResult === 1"
-              >未构造交易</el-tag
+              >构建交易失败</el-tag
             >
             <el-tag
               v-else-if="scope.row.TxResult === 2"
@@ -131,7 +131,7 @@
               disable-transitions
               >交易成功</el-tag
             >
-            <el-tag v-else type="danger" disable-transitions>构建失败</el-tag>
+            <el-tag v-else type="danger" disable-transitions>未构造交易</el-tag>
           </template>
         </el-table-column>
       </el-table>
