@@ -8,7 +8,6 @@
       @select="handleSelect"
     >
       <el-menu-item index="/">主页</el-menu-item>
-
       <el-menu-item index="/search">查询</el-menu-item>
     </el-menu>
     <router-view />
