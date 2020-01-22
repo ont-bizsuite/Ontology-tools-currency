@@ -10,14 +10,31 @@
       >
         <el-form-item label="事件名称" prop="eventType">
           <div style="padding-left: 100px; width: 100%; max-width: 900px;">
-            <el-checkbox-group v-model="ruleForm.eventType">
+            <el-select
+              v-model="ruleForm.eventType"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              style="margin-left: 20px;"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in eventTypeList"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+            <!-- <el-checkbox-group v-model="ruleForm.eventType">
               <el-checkbox
                 v-for="(item, index) in eventTypeList"
                 :key="index"
                 :label="item"
                 name="eventType"
               ></el-checkbox>
-            </el-checkbox-group>
+            </el-checkbox-group> -->
           </div>
         </el-form-item>
         <el-form-item>
@@ -39,7 +56,7 @@
               <el-select v-model="formInline.status" placeholder="状态列表">
                 <el-option label="所有状态" :value="6"></el-option>
                 <el-option label="构建失败" :value="0"></el-option>
-                <el-option label="未发送" :value="1"></el-option>
+                <el-option label="未构造交易" :value="1"></el-option>
                 <el-option label="发送失败" :value="2"></el-option>
                 <el-option label="发送成功" :value="3"></el-option>
                 <el-option label="交易失败" :value="4"></el-option>
@@ -100,7 +117,7 @@
               type="info"
               disable-transitions
               v-if="scope.row.TxResult === 1"
-              >未发送</el-tag
+              >未构造交易</el-tag
             >
             <el-tag
               v-else-if="scope.row.TxResult === 2"
@@ -255,7 +272,7 @@ export default {
         let str = ''
         switch (item.TxResult) {
           case 1:
-            str = '未发送'
+            str = '未构造交易'
             break
           case 2:
             str = '发送失败'
