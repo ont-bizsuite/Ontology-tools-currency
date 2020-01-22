@@ -18,7 +18,6 @@
             />
           </div>
           <div class="down_tep">
-            <!-- <a href="../assets/template.xlsx">下载模板</a> -->
             <el-button @click="download">下载模板</el-button>
           </div>
         </div>
@@ -154,35 +153,16 @@ export default {
       tableData: [],
       fileName: '',
       ruleForm: {
-        // passowrd: '',
         contractAddress: '',
-        // privateKey: '',
-        // wallet: '',
         eventType: ''
       },
       tokenType: 'ONT',
       rules: {
-        passowrd: [
-          {
-            pattern: /\S/,
-            required: true,
-            message: '请输入密码',
-            trigger: 'change'
-          }
-        ],
         contractAddress: [
           {
             pattern: /\S/,
             required: true,
             message: '请输入合约地址',
-            trigger: 'change'
-          }
-        ],
-        privateKey: [
-          {
-            pattern: /\S/,
-            required: true,
-            message: '请输入私钥',
             trigger: 'change'
           }
         ],
@@ -257,15 +237,9 @@ export default {
             }
             that.billList.push(sheetData)
           }
-          // let nnn = 0
           that.billList.map(value => {
             value.amount = that.getFullNum(value.amount)
-            // that.totalAmount += Number(value.amount)
-            // nnn = new BigNumber(value.amount).plus(nnn).toString()
           })
-          // console.log(nnn)
-          // that.totalAmount = nnn
-          // this.$refs.upload.value = ''
         } catch (e) {
           return false
         }
@@ -297,17 +271,12 @@ export default {
             })
           }
           this.upLoading = true
-          // console.log(this.dataParams)
-          // return
           return this.sendExcel()
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
     },
     async sendExcel() {
       let apires = await this.$http.UploadExcel(this.dataParams)
@@ -328,43 +297,8 @@ export default {
       this.getHistory = ''
       return this.$message.success('上传成功！')
     },
-    selectDat(e) {
-      let _self = this
-      let file = e.target.files
-      console.log('文件类型')
-      console.log(file)
-
-      if (file.length === 0) {
-        return
-      }
-      _self.walletFileName = file[0].name
-      let reader = new FileReader()
-      if (typeof FileReader === 'undefined') {
-        this.$message({
-          type: 'info',
-          message: '您的浏览器不支持FileReader接口'
-        })
-        return
-      }
-      reader.readAsText(file[0])
-      reader.onload = function(e) {
-        console.log(e.target.result)
-        _self.ruleForm.wallet = e.target.result
-      }
-    },
-    selectFn() {
-      this.$refs.upload_dat.click()
-    },
     sort_index(idx) {
       return idx + 1 + (this.currentPage - 1) * this.pageSize
-    },
-    splitFileName(text) {
-      var pattern = /\.{1}[a-z]{1,}$/
-      if (pattern.exec(text) !== null) {
-        return text.slice(0, pattern.exec(text).index)
-      } else {
-        return text
-      }
     },
     getFullNum(num) {
       //处理非数字
@@ -464,7 +398,6 @@ export default {
   },
   watch: {
     tokenType(val) {
-      // this.resetForm('ruleForm')
       this.walletFileName = ''
       this.ruleForm.wallet = ''
       switch (val) {
@@ -499,7 +432,6 @@ export default {
           billList: [...this.billList],
           ...this.ruleForm,
           tokenType: this.tokenType
-          // fileName: this.splitFileName(this.fileName)
         }
       }
     }

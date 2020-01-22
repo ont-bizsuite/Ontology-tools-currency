@@ -27,14 +27,6 @@
               >
               </el-option>
             </el-select>
-            <!-- <el-checkbox-group v-model="ruleForm.eventType">
-              <el-checkbox
-                v-for="(item, index) in eventTypeList"
-                :key="index"
-                :label="item"
-                name="eventType"
-              ></el-checkbox>
-            </el-checkbox-group> -->
           </div>
         </el-form-item>
         <el-form-item>
@@ -44,7 +36,6 @@
             @click="submitForm('ruleForm')"
             >立即查询</el-button
           >
-          <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -55,8 +46,8 @@
             <div>
               <el-select v-model="formInline.status" placeholder="状态列表">
                 <el-option label="所有状态" :value="6"></el-option>
-                <el-option label="构建失败" :value="0"></el-option>
-                <el-option label="未构造交易" :value="1"></el-option>
+                <el-option label="未构造交易" :value="0"></el-option>
+                <el-option label="构建交易失败" :value="1"></el-option>
                 <el-option label="发送失败" :value="2"></el-option>
                 <el-option label="发送成功" :value="3"></el-option>
                 <el-option label="交易失败" :value="4"></el-option>
@@ -157,9 +148,6 @@
   </div>
 </template>
 <script>
-// import { export2Excel } from '../common/js/util'
-import XLSX from 'xlsx'
-import FileSaver from 'file-saver'
 import { export_json_to_excel } from '../assets/js/Export2Excel'
 import moment from 'moment'
 export default {
@@ -272,7 +260,7 @@ export default {
         let str = ''
         switch (item.TxResult) {
           case 1:
-            str = '未构造交易'
+            str = '构建交易失败'
             break
           case 2:
             str = '发送失败'
@@ -287,7 +275,7 @@ export default {
             str = '交易成功'
             break
           default:
-            str = '构建失败'
+            str = '未构建交易'
             break
         }
         item.TxResult = str
