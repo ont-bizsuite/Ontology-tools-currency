@@ -6,7 +6,9 @@
           <div class="select_excel">
             <p>Excel文件 (.xsl,.xlsx)</p>
             <p style="margin-top: 10px;">
-              <el-button @click="clickFns" size="small">导入文件</el-button>
+              <el-button @click="$refs.upload.click()" size="small"
+                >导入文件</el-button
+              >
             </p>
             <p class="file_name">{{ fileName }}</p>
             <input
@@ -169,6 +171,7 @@
 // @ is an alias to /src
 import XLSX from 'xlsx'
 import { BigNumber } from 'bignumber.js'
+import { mapState } from 'vuex'
 
 export default {
   name: 'home',
@@ -202,7 +205,6 @@ export default {
           }
         ]
       },
-      walletFileName: '',
       showF: {
         isWallet: true,
         isPassword: true,
@@ -211,14 +213,12 @@ export default {
       },
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页的数据条数
-      totalAmount: 0,
       accountAddress: '',
-      options: [],
       historyAction: '',
       EstimateFee: 0,
       TotalSum: 0,
-      upLoading: false,
       Balance: 0,
+      upLoading: false,
       balanceLoading: false,
       transferLoading: false
     }
@@ -226,9 +226,6 @@ export default {
   methods: {
     download() {
       window.open('http://172.168.3.174/template.xlsx')
-    },
-    clickFns() {
-      this.$refs.upload.click()
     },
     readExcel(e) {
       //表格导入
@@ -297,9 +294,6 @@ export default {
           }
           this.upLoading = true
           return this.sendExcel()
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
@@ -318,7 +312,7 @@ export default {
       this.TotalSum = Sum
       this.Balance = AdminBalance
 
-      this.getEventType()
+      this.$store.dispatch('getEventList')
       this.getHistory = ''
       return this.$message.success('上传成功！')
     },
@@ -360,10 +354,6 @@ export default {
         this.ruleForm.contractAddress = data.ContractAddress
         this.tokenType = data.TokenType
       }
-    },
-    async getEventType() {
-      let apires = await this.$http.getEventType()
-      this.options = apires.Result
     },
     async handlerStart() {
       let params = {
@@ -419,12 +409,9 @@ export default {
       await this.readExcel(e)
       this.$refs.upload.value = ''
     })
-    this.getEventType()
   },
   watch: {
     tokenType(val) {
-      this.walletFileName = ''
-      this.ruleForm.wallet = ''
       switch (val) {
         case 'ERC20':
           this.showF.isWallet = false
@@ -448,6 +435,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      options: state => state.eventTypeList
+    }),
     dataParams() {
       return {
         id: 1,
