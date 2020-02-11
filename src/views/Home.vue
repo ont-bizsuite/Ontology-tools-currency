@@ -115,8 +115,15 @@
                 @click="getBalance()"
                 size="small"
                 >刷新余额</el-button
-              ></el-col
-            >
+              >
+              <el-button
+                @click="openAddressModel"
+                size="small"
+                :loading="withdrawLoading"
+                style="margin-left: 20px;"
+                >取出余额</el-button
+              >
+            </el-col>
           </el-row>
         </p>
       </div>
@@ -131,6 +138,7 @@
         "
         border
         style="width: 100%"
+        v-loading="tableLoading"
       >
         <el-table-column
           :index="sort_index"
@@ -220,7 +228,9 @@ export default {
       Balance: 0,
       upLoading: false,
       balanceLoading: false,
-      transferLoading: false
+      transferLoading: false,
+      withdrawLoading: false,
+      tableLoading: false
     }
   },
   methods: {
@@ -333,7 +343,6 @@ export default {
       return num.toFixed(18).replace(/\.?0+$/, '')
     },
     async handlerSelect(event) {
-      // console.log(event)
       if (event) {
         let params = {
           id: 1,
@@ -343,20 +352,26 @@ export default {
             eventType: [event]
           }
         }
-        let apires = await this.$http.getHistory(params)
-        let data = apires.Result[0]
-        this.tableData = [...data.TxInfo]
-        this.EstimateFee = data.EstimateFee
-        this.accountAddress = data.Admin
-        this.TotalSum = data.Sum
-        this.Balance = data.AdminBalance
-        this.ruleForm.eventType = data.EventType
-        this.ruleForm.contractAddress = data.ContractAddress
-        this.tokenType = data.TokenType
+        try {
+          this.tableLoading = true
+          let apires = await this.$http.getHistory(params)
+          this.tableLoading = false
+          let data = apires.Result[0]
+          this.tableData = [...data.TxInfo]
+          this.EstimateFee = data.EstimateFee
+          this.accountAddress = data.Admin
+          this.TotalSum = data.Sum
+          this.Balance = data.AdminBalance
+          this.ruleForm.eventType = data.EventType
+          this.ruleForm.contractAddress = data.ContractAddress
+          this.tokenType = data.TokenType
+        } catch (error) {
+          this.tableLoading = false
+        }
       }
     },
     async handlerStart() {
-      if (this.TotalSum >= this.Balance) {
+      if (this.TotalSum > this.Balance) {
         return this.$message({
           type: 'error',
           message: '地址余额小于总额！'
@@ -408,6 +423,56 @@ export default {
       return this.$message({
         type: 'success',
         message: '查询成功'
+      })
+    },
+    openAddressModel() {
+      if (!this.accountAddress) {
+        return this.$message({
+          type: 'error',
+          message: '选择一个事件名称!'
+        })
+      }
+      this.$prompt('请输入地址', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\S/,
+        inputErrorMessage: '请输入地址'
+      })
+        .then(({ value }) => {
+          let params = {
+            id: 1,
+            jsonrpc: '2.0',
+            method: 'withdraw',
+            params: {
+              eventType: this.ruleForm.eventType,
+              address: value
+            }
+          }
+          console.log(params)
+          this.withdrawLoading = true
+          this.withdraw(params)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+    },
+    async withdraw(params) {
+      let apiRes = await this.$http.withDraw(params)
+      console.log(apiRes)
+      this.withdrawLoading = false
+      const { Desc, Error, Result } = apiRes
+      if (Desc !== 'SUCCESS' && Error !== 1) {
+        return this.$message({
+          type: 'error',
+          message: Desc
+        })
+      }
+      this.$message({
+        type: 'success',
+        message: '取出成功，请稍后查看！'
       })
     }
   },
