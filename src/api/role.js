@@ -37,6 +37,14 @@ export function getBalance(id) {
   })
 }
 
+export function withDraw(data) {
+  return request({
+    url: `/api/v1/withdraw`,
+    method: 'post',
+    data
+  })
+}
+
 export function downloadFile(data) {
   return request({
     url: `/api/v1/data/download-url?password=${data.password}&fileHash=${data.fileHash}`,
