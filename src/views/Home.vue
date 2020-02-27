@@ -371,12 +371,12 @@ export default {
       }
     },
     async handlerStart() {
-      if (this.TotalSum > this.Balance) {
-        return this.$message({
-          type: 'error',
-          message: '地址余额小于总额！'
-        })
-      }
+      // if (this.TotalSum > this.Balance) {
+      //   return this.$message({
+      //     type: 'error',
+      //     message: '地址余额小于总额！'
+      //   })
+      // }
 
       let params = {
         id: 1,
