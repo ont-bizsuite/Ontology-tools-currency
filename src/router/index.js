@@ -7,19 +7,24 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    name: 'ContentWrap',
+    component: () => import('../views/ContentWrap.vue')
   },
   {
     path: '/search',
     name: 'search',
     component: () => import('../views/Search.vue')
   },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/Test.vue')
-  // },
+  {
+    path: '/layout',
+    name: 'Layout',
+    component: () => import('../views/Layout.vue')
+  },
+  {
+    path: '/history',
+    name: 'HistoryWrap',
+    component: () => import('../views/HistoryWrap.vue')
+  },
   {
     path: '*',
     redirect: '/'
