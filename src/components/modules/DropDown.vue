@@ -1,12 +1,12 @@
 <template>
   <div class="lang">
-    <el-dropdown>
+    <el-dropdown @command="handleCommand">
       <span class="el-dropdown-link">
-        English 
+        {{ isLocal }}
         <div class="ball_box el-icon-arrow-down"></div>
       </span>
       <el-dropdown-menu
-        class='lang_zh'
+        class="lang_zh"
         slot="dropdown"
         :visible-arrow="false"
         :divided="true"
@@ -40,18 +40,17 @@ export default {
       let self = this
       self.$i18n.locale = command
       localStorage.setItem('user_lang', command)
-      console.log(111)
       // $('html,body').animate({ scrollTop: 0 }, 1)
       // setTimeout(() => {
       //   self.$router.go(0)
       // }, 200)
     }
   },
-  // computed: {
-  //   isLocal: function() {
-  //     return this.$i18n.locale
-  //   }
-  // }
+  computed: {
+    isLocal: function() {
+      return this.$i18n.locale === 'en' ? 'English' : '中文'
+    }
+  }
 }
 </script>
 

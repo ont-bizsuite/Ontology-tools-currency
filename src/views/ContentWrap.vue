@@ -261,7 +261,8 @@ export default {
           span.upload_icon {
             width: 25px;
             height: 26px;
-            background: #000;
+            background: url(../assets/upload_black.svg) no-repeat center;
+            background-size: contain;
             margin-left: 15px;
             cursor: pointer;
           }
@@ -284,7 +285,8 @@ export default {
         span.eye_icon {
           width: 25px;
           height: 17px;
-          background: #000;
+          background: url(../assets/check_black.svg) no-repeat center;
+          background-size: contain;
           margin-left: 15px;
           cursor: pointer;
           transition: all 0.6s;
