@@ -8,9 +8,9 @@ export function UploadExcel(data) {
   })
 }
 
-export function getEventType() {
+export function getEventType(data) {
   return request({
-    url: `/api/v1/getalleventtype`,
+    url: `/api/v1/gettxInfoevtty/${data}`,
     method: 'GET'
   })
 }
@@ -30,9 +30,9 @@ export function getHistory(data) {
   })
 }
 
-export function getBalance(id) {
+export function getBalance(data) {
   return request({
-    url: `/api/v1/getadminbalancebyeventtype/${id}`,
+    url: `/api/v1/getadminbalance/${data.eventType}/${data.netType}`,
     method: 'GET'
   })
 }
@@ -48,6 +48,20 @@ export function withDraw(data) {
 export function downloadFile(data) {
   return request({
     url: `/api/v1/data/download-url?password=${data.password}&fileHash=${data.fileHash}`,
+    method: 'GET'
+  })
+}
+
+export function queryTableData(data) {
+  return request({
+    url: `/api/v1/getexcelparam/${data.eventType}/${data.netType}/${data.pageNum}/${data.pageSize}`,
+    method: 'GET'
+  })
+}
+
+export function queryTransferProgress(params) {
+  return request({
+    url: `/api/v1/gettransferprogress/${params.eventType}/${params.netType}`,
     method: 'GET'
   })
 }

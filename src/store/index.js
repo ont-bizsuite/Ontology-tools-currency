@@ -6,16 +6,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    eventTypeList: []
+    eventTypeList: [],
+    netType: null
   },
   mutations: {
     CHANGE_EVENT_LIST(state, payload) {
       state.eventTypeList = [...payload]
+    },
+    CHANGE_NET_TYPE(state, payload) {
+      state.netType = payload
     }
   },
   actions: {
-    async getEventList({ commit }) {
-      let result = await http.getEventType()
+    async getEventList({ commit }, payload) {
+      let result = await http.getEventType(payload)
       commit('CHANGE_EVENT_LIST', [...result.Result])
     }
   },

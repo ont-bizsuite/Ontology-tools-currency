@@ -1,8 +1,8 @@
 <template>
   <div class="lang">
-    <el-dropdown>
+    <el-dropdown @command="handleCommand">
       <span class="el-dropdown-link">
-        MainNet
+        {{ netType === 'testnet' ? 'TestNet' : 'MainNet' }}
         <div class="ball_box"></div>
       </span>
       <el-dropdown-menu
@@ -11,10 +11,10 @@
         :visible-arrow="false"
         :divided="true"
       >
-        <el-dropdown-item command="mainNet"
+        <el-dropdown-item command="mainnet"
           ><div class="openKG">MainNet</div></el-dropdown-item
         >
-        <el-dropdown-item command="testNet"
+        <el-dropdown-item command="testnet"
           ><div class="openKG">TestNet</div></el-dropdown-item
         >
       </el-dropdown-menu>
@@ -26,6 +26,11 @@
 // import $ from 'jquery'
 
 export default {
+  data() {
+    return {
+      netType: ''
+    }
+  },
   filters: {
     langStyle: function(value) {
       if (value === 'en') {
@@ -37,21 +42,20 @@ export default {
   },
   methods: {
     handleCommand: function(command) {
-      let self = this
-      self.$i18n.locale = command
-      localStorage.setItem('user_lang', command)
-      console.log(111)
+      this.netType = command
+      this.$store.commit('CHANGE_NET_TYPE', this.netType)
+      localStorage.setItem('netType', command)
+      // console.log(111)
       // $('html,body').animate({ scrollTop: 0 }, 1)
       // setTimeout(() => {
       //   self.$router.go(0)
       // }, 200)
     }
+  },
+  mounted() {
+    this.netType = localStorage.getItem('netType') || 'testnet'
+    this.$store.commit('CHANGE_NET_TYPE', this.netType)
   }
-  // computed: {
-  //   isLocal: function() {
-  //     return this.$i18n.locale
-  //   }
-  // }
 }
 </script>
 

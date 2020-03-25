@@ -36,7 +36,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('getEventList')
+    // this.$store.dispatch('getEventList')
   }
 }
 </script>
@@ -84,6 +84,12 @@ export default {
       overflow-y: auto;
       height: calc(100vh - 54px);
     }
+  }
+}
+/deep/ .el-dialog {
+  .el-form-item__label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 1);
   }
 }
 </style>

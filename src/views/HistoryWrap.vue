@@ -1,15 +1,15 @@
 <template>
-  <div class="hostory_wraps">
+  <div class="hostory_wraps" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="his_area1">
       <div class="ele_item">
         <div class="label_title">发放任务名称</div>
         <div class="actions_areas">
-          <el-select v-model="value" filterable placeholder="请选择">
+          <el-select v-model="currentEvent" filterable placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in eventTypeList"
+              :key="item"
+              :label="item"
+              :value="item"
             >
             </el-option>
           </el-select>
@@ -17,24 +17,35 @@
       </div>
       <div class="ele_item">
         <div class="label_title">
-          需充值发放币种总额
+          状态
         </div>
         <div class="input_area">
-          <input type="text" disabled placeholder="adsfasdfasdf" />
+          <div class="btype inpress" v-if="transPro.evtStatus === 1">
+            执行中
+          </div>
+          <div class="btype" v-else-if="transPro.evtStatus === 2">已完成</div>
+          <div class="btype" v-else-if="transPro.evtStatus === 0">未开始</div>
+          <div class="btype" v-else></div>
         </div>
       </div>
       <div class="search_area">
-        <div class="btns">查询</div>
+        <div class="btns" @click="queryTransPro">查询</div>
       </div>
     </div>
     <div class="his_area2">
       <ul>
-        <li>总交易笔数：<span>100</span></li>
-        <li>交易成功：<span>100</span></li>
-        <li>交易失败：<span>100</span></li>
+        <li>
+          总交易笔数：<span>{{ transPro.total }}</span>
+        </li>
+        <li>
+          交易成功：<span>{{ transPro.success }}</span>
+        </li>
+        <li>
+          交易失败：<span>{{ transPro.failed }}</span>
+        </li>
       </ul>
       <div class="search_area">
-        <div class="btns">失败交易重新执行</div>
+        <div class="btns" @click="handlerStart">失败交易重新执行</div>
       </div>
     </div>
     <div class="his_area3">
@@ -42,13 +53,24 @@
         <div class="label_title">
           管理员地址余额
         </div>
-        <div class="input_area">
-          <input type="text" disabled placeholder="adsfasdfasdf" />
+        <div class="input_area balance_wrap">
+          <!-- <input type="text" disabled placeholder="adsfasdfasdf" /> -->
+          <div class="balance_item">
+            <ul v-if="AdminBalance">
+              <li v-for="(item, key) in AdminBalance" :key="key">
+                <div class="balance_area">{{ key }}: {{ item }}</div>
+                <div class="btn_balance" @click="withdrew">提取余额</div>
+              </li>
+            </ul>
+            <div v-else class="no_balance"></div>
+          </div>
         </div>
       </div>
       <div class="search_area">
-        <div class="no_colors">刷新余额</div>
-        <div class="no_colors saveMon">提取余额</div>
+        <!-- <div class="no_colors" @click="getBalance">刷新余额</div> -->
+        <div class="no_colors" @click="withdrew">刷新余额</div>
+
+        <!-- <div class="no_colors saveMon">提取余额</div> -->
       </div>
     </div>
     <div class="his_area4">
@@ -94,64 +116,56 @@
         </el-pagination>
       </div>
     </div>
+    <Dialog-div
+      @colseFn="handlerCloseDialog"
+      :dialogFormVisible="dialogFormVisible"
+    ></Dialog-div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+import DialogDiv from '@/components/modules/Dialog'
+
 export default {
+  components: {
+    DialogDiv
+  },
+  computed: {
+    ...mapState({
+      netType: state => state.netType,
+      eventTypeList: state => state.eventTypeList
+    })
+  },
   data() {
     return {
+      dialogFormVisible: false,
       currentPage: 1,
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      value: '',
+      currentEvent: '',
       formInline: {
         status: ''
       },
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      tableData: [],
+      transPro: {
+        failed: 0,
+        notSend: 0,
+        sendFailed: 0,
+        success: 0,
+        total: 0,
+        transfering: 0,
+        evtStatus: null
+      },
+      fullscreenLoading: false,
+      AdminBalance: null
     }
   },
   methods: {
+    handlerCloseDialog(params) {
+      this.dialogFormVisible = params
+      clearInterval(this.timer)
+    },
+    withdrew() {
+      this.dialogFormVisible = true
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
       this.currentPage = 1
@@ -160,7 +174,96 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.currentPage = val
+    },
+    async queryTransPro() {
+      if (!this.currentEvent) {
+        this.$message({
+          type: 'error',
+          message: '请先选择一个事件！'
+        })
+      }
+      try {
+        let apires = await this.$http.queryTransferProgress({
+          eventType: this.currentEvent,
+          netType: this.netType
+        })
+        console.log(apires)
+        if (apires.Desc === 'SUCCESS' && apires.Error === 1) {
+          this.transPro = { ...apires.Result }
+        }
+      } catch (error) {}
+    },
+    async handlerStart() {
+      if (!this.currentEvent) {
+        this.$message({
+          type: 'error',
+          message: '请先选择一个事件！'
+        })
+      }
+      let params = {
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'transfer',
+        params: {
+          eventType: this.currentEvent,
+          netType: this.netType
+        }
+      }
+      this.fullscreenLoading = true
+      try {
+        let apires = await this.$http.startTransfer(params)
+        this.fullscreenLoading = false
+        const { Desc, Error, Result } = apires
+        if (Desc !== 'SUCCESS' || Error !== 1) {
+          return this.$message({
+            type: 'error',
+            message: Desc
+          })
+        }
+        return this.$message({
+          type: 'success',
+          message: '已开始转账'
+        })
+      } catch (error) {
+        this.fullscreenLoading = false
+        this.$message({
+          type: 'error',
+          message: error
+        })
+      }
+    },
+    async getBalance() {
+      if (!this.currentEvent) {
+        this.$message({
+          type: 'error',
+          message: '请先选择一个事件！'
+        })
+      }
+      try {
+        let apires = await this.$http.getBalance({
+          eventType: this.currentEvent,
+          netType: this.netType
+        })
+        console.log(apires)
+        const { Desc, Error, Result } = apires
+
+        if (Desc !== 'SUCCESS' && Error !== 1) {
+          return this.$message({
+            type: 'error',
+            message: Desc
+          })
+        }
+        this.AdminBalance = { ...Result }
+      } catch (error) {
+        return this.$message({
+          type: 'error',
+          message: error
+        })
+      }
     }
+  },
+  mounted() {
+    this.$store.dispatch('getEventList', this.netType)
   }
 }
 </script>
@@ -211,6 +314,58 @@ export default {
       &:disabled {
         background: #f5f7f6;
       }
+    }
+  }
+  .input_area.balance_wrap {
+    justify-content: flex-start;
+    min-height: 45px;
+    height: auto;
+    .balance_item {
+      flex: 1;
+      ul {
+        li {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          .balance_area {
+            flex: 1;
+            min-height: 45px;
+            font-size: 12px;
+            padding: 14px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            line-height: 17px;
+            background: #f5f7f6;
+          }
+          .btn_balance {
+            padding: 8px 28px;
+            font-size: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            height: 33px;
+            line-height: 16px;
+            border-radius: 17px;
+            margin-left: 40px;
+            cursor: pointer;
+            transition: all 0.6s;
+            color: #48a3ff;
+            &:hover {
+              background: #fafafa;
+            }
+          }
+          &:nth-last-of-type(1) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+    .no_balance {
+      flex: 1;
+      height: 45px;
+      line-height: 45px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -292,5 +447,17 @@ export default {
 .ont-pages {
   text-align: right;
   margin-top: 30px;
+}
+.btype {
+  flex: 1;
+  min-height: 45px;
+  font-size: 12px;
+  padding: 14px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  line-height: 17px;
+}
+.inpress.btype {
+  background: #f5f7f6;
 }
 </style>
