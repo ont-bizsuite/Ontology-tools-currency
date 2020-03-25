@@ -45,11 +45,9 @@ export default {
       this.netType = command
       this.$store.commit('CHANGE_NET_TYPE', this.netType)
       localStorage.setItem('netType', command)
-      // console.log(111)
-      // $('html,body').animate({ scrollTop: 0 }, 1)
-      // setTimeout(() => {
-      //   self.$router.go(0)
-      // }, 200)
+      setTimeout(() => {
+        this.$router.go(0)
+      }, 200)
     }
   },
   mounted() {

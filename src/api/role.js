@@ -8,9 +8,9 @@ export function UploadExcel(data) {
   })
 }
 
-export function getEventType(data) {
+export function getEventType() {
   return request({
-    url: `/api/v1/gettxInfoevtty/${data}`,
+    url: `/api/v1/getevtty`,
     method: 'GET'
   })
 }
@@ -62,6 +62,13 @@ export function queryTableData(data) {
 export function queryTransferProgress(params) {
   return request({
     url: `/api/v1/gettransferprogress/${params.eventType}/${params.netType}`,
+    method: 'GET'
+  })
+}
+
+export function getHistoryInfo(data) {
+  return request({
+    url: `/api/v1/gettxinfo/${data.eventType}/${data.netType}/${data.pageNum}/${data.pageSize}/${data.status}`,
     method: 'GET'
   })
 }

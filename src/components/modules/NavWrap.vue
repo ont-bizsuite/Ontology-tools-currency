@@ -5,22 +5,20 @@
         @click="$router.push({ name: 'ContentWrap' })"
         :class="$route.name === 'ContentWrap' ? 'active' : ''"
       >
-        代币发放
+        {{ $t('layout.nav1') }}
       </li>
       <li
         @click="$router.push({ name: 'HistoryWrap' })"
         :class="$route.name === 'HistoryWrap' ? 'active' : ''"
       >
-        历史记录
+        {{ $t('layout.nav2') }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-export default {
-  
-}
+export default {}
 </script>
 
 <style lang="less" scoped>

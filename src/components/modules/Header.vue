@@ -1,6 +1,6 @@
 <template>
   <div class="home_header_wrap">
-    <h1>代币批量发放工具</h1>
+    <h1>{{$t('home')}}</h1>
     <div class="dropDown_wrap"><Net-div></Net-div><Lang-div></Lang-div></div>
   </div>
 </template>

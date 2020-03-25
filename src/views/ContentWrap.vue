@@ -8,7 +8,7 @@
         <h2>Step 1</h2>
       </div>
       <div class="subTitle">
-        <span>请填写本次发放任务的基本信息</span>
+        <span>{{ $t('wraps.oneTips') }}</span>
       </div>
       <div class="form_area">
         <el-form
@@ -18,11 +18,14 @@
           label-width="190px"
           class="demo-ruleForm"
         >
-          <el-form-item label="任务名称" prop="eventType">
+          <el-form-item :label="$t('wraps.enentName')" prop="eventType">
             <el-input v-model="ruleForm.eventType"></el-input>
           </el-form-item>
-          <el-form-item label="发放币种" prop="tokenType">
-            <el-select v-model="ruleForm.tokenType" placeholder="--选择币种--">
+          <el-form-item :label="$t('wraps.tokenType')" prop="tokenType">
+            <el-select
+              v-model="ruleForm.tokenType"
+              :placeholder="$t('wraps.coinPlace')"
+            >
               <el-option label="ONT" value="ONT"></el-option>
               <el-option label="ONG" value="ONG"></el-option>
               <el-option label="ERC20" value="ERC20"></el-option>
@@ -31,7 +34,7 @@
           </el-form-item>
           <el-form-item
             v-if="showTran"
-            label="代币合约地址"
+            :label="t('wraps.contr')"
             prop="contractAddress"
           >
             <el-input v-model="ruleForm.contractAddress"></el-input>
@@ -50,17 +53,19 @@
         <h2>Step 2</h2>
       </div>
       <div class="subTitle">
-        <span>请上传发放明细文件</span>
-        <span class="template_btn" @click="download">发放明细模版</span>
+        <span>{{ $t('wraps.twoTips') }}</span>
+        <span class="template_btn" @click="download">{{
+          $t('wraps.template')
+        }}</span>
       </div>
       <div class="form_area">
         <div class="ele_item">
-          <div class="lable_title">请导入发放明细</div>
+          <div class="lable_title">{{ $t('wraps.fileTitle') }}</div>
           <div class="input_area" @click="submitForm">
             <div class="input_temp">
-              <span v-if="!fileName" class="placehodel"
-                >浏览文件（.xsl,.xlsx）</span
-              >
+              <span v-if="!fileName" class="placehodel">{{
+                $t('wraps.filePlace')
+              }}</span>
               <span v-else class="file_name">{{ fileName }}</span>
             </div>
             <span class="upload_icon"></span>
@@ -76,21 +81,32 @@
         <div class="ele_item" style="margin-top: 26px">
           <ul class="data_nav">
             <li>
-              发放总额：<span v-if="!TotalCoin">暂无数据</span>
-              <span v-else>{{ TotalCoin }}</span>
+              <div>
+                <span class="tbTitle">
+                  {{ $t('wraps.totalAmout') }}
+                </span>
+                ：<span v-if="!TotalCoin">{{ $t('wraps.noData') }}</span>
+                <span v-else>{{ TotalCoin }}</span>
+              </div>
             </li>
             <li>
-              预估手续费：<span v-if="!TotalFee">暂无数据</span
+              {{ $t('wraps.transFee') }}：<span v-if="!TotalFee">{{
+                $t('wraps.noData')
+              }}</span
               ><span v-else>{{ TotalFee }}</span>
             </li>
             <li>
-              手续费种类：<span v-if="!isShowTypeFee">暂无数据</span
+              {{ $t('wraps.feeType') }}：<span v-if="!isShowTypeFee">{{
+                $t('wraps.noData')
+              }}</span
               ><span v-else>{{
                 changeForm.tokenType === 'ERC20' ? 'ERC20' : 'ONG'
               }}</span>
             </li>
             <li>
-              发放笔数：<span v-if="!TotalData">暂无数据</span
+              {{ $t('wraps.totalTrans') }}：<span v-if="!TotalData">{{
+                $t('wraps.noData')
+              }}</span
               ><span v-else>{{ TotalData }}</span>
             </li>
           </ul>
@@ -104,7 +120,7 @@
           style="width: 100%"
           v-loading="tableLoading"
         >
-          <el-table-column label="序号" align="center" width="70">
+          <el-table-column label="Index" align="center" width="70">
             <template scope="scope"
               ><span
                 >{{ scope.$index + (currentPage - 1) * pageSize + 1 }}
@@ -137,12 +153,12 @@
         <h2>Step 3</h2>
       </div>
       <div class="subTitle">
-        <span>转入需要发放的Token</span>
+        <span>{{ $t('wraps.threeTips') }}</span>
       </div>
       <div class="form_area">
         <div class="ele_item">
           <div class="lable_title">
-            请将需要批量发放的 Token 存入如下地址
+            {{ $t('wraps.saveAdd') }}
           </div>
           <div class="input_area">
             <input type="text" v-model="tokenAddress" disabled placeholder="" />
@@ -150,7 +166,7 @@
         </div>
         <div class="ele_item">
           <div class="lable_title">
-            需充值发放币种总额
+            {{ $t('wraps.totalSum') }}
           </div>
           <div class="input_area">
             <input type="text" v-model="TotalCoin" disabled placeholder="" />
@@ -158,7 +174,7 @@
         </div>
         <div class="ele_item">
           <div class="lable_title">
-            需充值手续费总额
+            {{ $t('wraps.totalfeesum') }}
           </div>
           <div class="input_area">
             <input type="text" v-model="TotalFee" disabled placeholder="" />
@@ -166,7 +182,7 @@
         </div>
         <div class="ele_item">
           <div class="lable_title">
-            当前地址余额
+            {{ $t('wraps.currentBal') }}
           </div>
           <div v-if="AdminBalance" class="input_area balances">
             <div
@@ -175,28 +191,40 @@
               :key="key"
             >
               <div class="btype">{{ key }}: {{ item }}</div>
-              <span class="depl_btn">提取余额</span>
+              <span class="depl_btn" @click="withdrew(key)">
+                {{ $t('wraps.withDrew') }}</span
+              >
             </div>
           </div>
           <div class="no_tems" v-else></div>
 
           <div class="action_area">
-            <span class="ref_btn" @click="getBalance">刷新余额</span>
+            <span class="ref_btn" @click="getBalance">{{
+              $t('wraps.refreBa')
+            }}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="starts_btn" @click="handlerStart">
-      开始转账
+      {{ $t('wraps.startTrans') }}
     </div>
-    
+    <Dialog-div
+      @colseFn="handlerCloseDialog"
+      :dialogFormVisible="dialogFormVisible"
+      :withdrawData="withdrawData"
+    ></Dialog-div>
   </div>
 </template>
 <script>
 import XLSX from 'xlsx'
 import { mapState } from 'vuex'
+import DialogDiv from '@/components/modules/Dialog'
 
 export default {
+  components: {
+    DialogDiv
+  },
   computed: {
     showTran() {
       if (
@@ -226,6 +254,7 @@ export default {
   },
   data() {
     return {
+      dialogFormVisible: false,
       tableLoading: false,
       tableData: [],
       isShowTypeFee: false,
@@ -268,10 +297,23 @@ export default {
       changeForm: { eventType: '', tokenType: '', contractAddress: '' },
       currentPage: 1,
       pageSize: 1,
-      pageNum: 1
+      pageNum: 1,
+      withdrawData: {}
     }
   },
   methods: {
+    withdrew(data) {
+      this.withdrawData = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        tokenType: data
+      }
+      this.dialogFormVisible = true
+    },
+    handlerCloseDialog(params) {
+      this.dialogFormVisible = params
+      this.getBalance()
+    },
     download() {
       window.open('http://172.168.3.174/template.xlsx', '_blank')
     },
@@ -486,6 +528,11 @@ export default {
             message: Desc
           })
         }
+        this.$store.commit(
+          'CHANGE_SUCCESS_EVENT_TYPE',
+          this.changeForm.eventType
+        )
+        this.$router.push({ name: 'HistoryWrap' })
         return this.$message({
           type: 'success',
           message: '已开始转账'
@@ -630,6 +677,15 @@ export default {
             border-right: 1px solid rgba(0, 0, 0, 0.2);
             font-weight: 600;
             line-height: 17px;
+            height: auto;
+            div {
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              .tbTitle {
+                width: 60px;
+              }
+            }
             &:nth-last-of-type(1) {
               border-right: none;
             }

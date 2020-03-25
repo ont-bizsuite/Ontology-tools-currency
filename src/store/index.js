@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     eventTypeList: [],
-    netType: null
+    netType: null,
+    successEvent: null
   },
   mutations: {
     CHANGE_EVENT_LIST(state, payload) {
@@ -15,6 +16,9 @@ export default new Vuex.Store({
     },
     CHANGE_NET_TYPE(state, payload) {
       state.netType = payload
+    },
+    CHANGE_SUCCESS_EVENT_TYPE(state, payload) {
+      state.successEvent = payload
     }
   },
   actions: {

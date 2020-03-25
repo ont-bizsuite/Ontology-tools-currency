@@ -2,9 +2,13 @@
   <div class="hostory_wraps" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="his_area1">
       <div class="ele_item">
-        <div class="label_title">发放任务名称</div>
+        <div class="label_title">{{ $t('wraps.enentName') }}</div>
         <div class="actions_areas">
-          <el-select v-model="currentEvent" filterable placeholder="请选择">
+          <el-select
+            v-model="currentEvent"
+            filterable
+            placeholder="Please select event name"
+          >
             <el-option
               v-for="item in eventTypeList"
               :key="item"
@@ -17,41 +21,45 @@
       </div>
       <div class="ele_item">
         <div class="label_title">
-          状态
+          {{ $t('history.status') }}
         </div>
         <div class="input_area">
           <div class="btype inpress" v-if="transPro.evtStatus === 1">
-            执行中
+            {{ $t('common.evtStatus1') }}
           </div>
-          <div class="btype" v-else-if="transPro.evtStatus === 2">已完成</div>
-          <div class="btype" v-else-if="transPro.evtStatus === 0">未开始</div>
+          <div class="btype" v-else-if="transPro.evtStatus === 2">
+            {{ $t('common.evtStatus2') }}
+          </div>
+          <div class="btype" v-else-if="transPro.evtStatus === 0">
+            {{ $t('common.evtStatus3') }}
+          </div>
           <div class="btype" v-else></div>
         </div>
       </div>
       <div class="search_area">
-        <div class="btns" @click="queryTransPro">查询</div>
+        <div class="btns" @click="queryTransPro">{{ $t('history.query') }}</div>
       </div>
     </div>
     <div class="his_area2">
       <ul>
         <li>
-          总交易笔数：<span>{{ transPro.total }}</span>
+          {{ $t('history.totlalTrasn') }}<span>{{ transPro.total }}</span>
         </li>
         <li>
-          交易成功：<span>{{ transPro.success }}</span>
+          {{ $t('history.successsTras') }}<span>{{ transPro.success }}</span>
         </li>
         <li>
-          交易失败：<span>{{ transPro.failed }}</span>
+          {{ $t('history.failTrans') }}<span>{{ transPro.failed }}</span>
         </li>
       </ul>
       <div class="search_area">
-        <div class="btns" @click="handlerStart">失败交易重新执行</div>
+        <div class="btns" @click="handlerStart">{{ $t('history.refer') }}</div>
       </div>
     </div>
     <div class="his_area3">
       <div class="ele_item">
         <div class="label_title">
-          管理员地址余额
+          {{ $t('history.adminBa') }}
         </div>
         <div class="input_area balance_wrap">
           <!-- <input type="text" disabled placeholder="adsfasdfasdf" /> -->
@@ -59,7 +67,9 @@
             <ul v-if="AdminBalance">
               <li v-for="(item, key) in AdminBalance" :key="key">
                 <div class="balance_area">{{ key }}: {{ item }}</div>
-                <div class="btn_balance" @click="withdrew">提取余额</div>
+                <div class="btn_balance" @click="withdrew(key)">
+                  {{ $t('wraps.withDrew') }}
+                </div>
               </li>
             </ul>
             <div v-else class="no_balance"></div>
@@ -67,8 +77,10 @@
         </div>
       </div>
       <div class="search_area">
-        <!-- <div class="no_colors" @click="getBalance">刷新余额</div> -->
-        <div class="no_colors" @click="withdrew">刷新余额</div>
+        <div class="no_colors" @click="getBalance">
+          {{ $t('wraps.refreBa') }}
+        </div>
+        <!-- <div class="no_colors" @click="withdrew">{{ $t('wraps.refreBa') }}</div> -->
 
         <!-- <div class="no_colors saveMon">提取余额</div> -->
       </div>
@@ -76,42 +88,111 @@
     <div class="his_area4">
       <div class="search_select">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="状态">
+          <el-form-item :label="$t('history.status')">
             <div>
-              <el-select v-model="formInline.status" placeholder="--所有状态--">
-                <el-option label="所有状态" :value="6"></el-option>
-                <el-option label="未构造交易" :value="0"></el-option>
-                <el-option label="构建交易失败" :value="1"></el-option>
-                <el-option label="发送失败" :value="2"></el-option>
-                <el-option label="转账进行中" :value="3"></el-option>
-                <el-option label="交易失败" :value="4"></el-option>
-                <el-option label="交易成功" :value="5"></el-option>
+              <el-select
+                @change="handleSelectChange"
+                v-model="formInline.status"
+                placeholder="-- All --"
+              >
+                <el-option
+                  :label="$t('common.allStatus')"
+                  :value="6"
+                ></el-option>
+                <el-option
+                  :label="$t('common.notGener')"
+                  :value="0"
+                ></el-option>
+                <el-option
+                  :label="$t('common.generFail')"
+                  :value="1"
+                ></el-option>
+                <el-option
+                  :label="$t('common.sendFail')"
+                  :value="2"
+                ></el-option>
+                <el-option :label="$t('common.inpro')" :value="3"></el-option>
+                <el-option
+                  :label="$t('common.failSend')"
+                  :value="4"
+                ></el-option>
+                <el-option :label="$t('common.sucSend')" :value="5"></el-option>
               </el-select>
             </div>
           </el-form-item>
-          <!-- <el-form-item>
-            <el-button type="primary">筛选</el-button>
-          </el-form-item> -->
         </el-form>
         <div class="excel_btn">
-          <div class="no_colors">导出Excel</div>
+          <div class="no_colors" @click="handlerExport">
+            {{ $t('history.exports') }}
+          </div>
         </div>
       </div>
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180">
+        <el-table-column fixed label="Index" align="center" width="70">
+          <template scope="scope"
+            ><span
+              >{{ scope.$index + (currentPage - 1) * pageSize + 1 }}
+            </span></template
+          >
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="180">
+        <el-table-column fixed prop="TokenType" label="Token Type" width="120">
         </el-table-column>
-        <el-table-column prop="address" label="地址"> </el-table-column>
+        <el-table-column prop="Amount" label="Token Amount" width="120">
+        </el-table-column>
+        <el-table-column prop="Address" label="Address" width="320">
+        </el-table-column>
+        <el-table-column prop="TxHash" label="Txhash" width="320">
+        </el-table-column>
+        <el-table-column prop="TxTime" label="Transaction Time" width="220">
+        </el-table-column>
+        <el-table-column
+          prop="TxResult"
+          label="Status"
+          fixed="right"
+          width="87"
+        >
+          <template slot-scope="scope">
+            <el-tag
+              type="info"
+              disable-transitions
+              v-if="scope.row.TxResult === 1"
+              >{{ $t('common.generFail') }}</el-tag
+            >
+            <el-tag
+              v-else-if="scope.row.TxResult === 2"
+              type="danger"
+              disable-transitions
+              >{{ $t('common.sendFail') }}</el-tag
+            >
+            <el-tag v-else-if="scope.row.TxResult === 3" disable-transitions>{{
+              $t('common.inpro')
+            }}</el-tag>
+            <el-tag
+              v-else-if="scope.row.TxResult === 4"
+              type="danger"
+              disable-transitions
+              >{{ $t('common.failSend') }}</el-tag
+            >
+            <el-tag
+              v-else-if="scope.row.TxResult === 5"
+              type="success"
+              disable-transitions
+              >{{ $t('common.sucSend') }}</el-tag
+            >
+            <el-tag v-else type="warning" disable-transitions>{{
+              $t('common.notGener')
+            }}</el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="ont-pages">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-size="10"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
-          :total="tableData.length"
+          :total="totalAmout"
         >
         </el-pagination>
       </div>
@@ -119,12 +200,28 @@
     <Dialog-div
       @colseFn="handlerCloseDialog"
       :dialogFormVisible="dialogFormVisible"
+      :withdrawData="withdrawData"
     ></Dialog-div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import DialogDiv from '@/components/modules/Dialog'
+import moment from 'moment'
+import { export_json_to_excel } from '../assets/js/Export2Excel'
+
+const actions = new Map([
+  [1, ['Failed to generate transaction']],
+  [2, ['Failed transfers']],
+  [3, ['In progress']],
+  [4, ['Failed transactions']],
+  [5, ['Confirmed transactions']],
+  ['default', ['Transactions not generated']]
+])
+const filterAction = status => {
+  let action = actions.get(status) || actions.get('default')
+  return action[0]
+}
 
 export default {
   components: {
@@ -133,7 +230,8 @@ export default {
   computed: {
     ...mapState({
       netType: state => state.netType,
-      eventTypeList: state => state.eventTypeList
+      eventTypeList: state => state.eventTypeList,
+      successEvent: state => state.successEvent
     })
   },
   data() {
@@ -142,7 +240,7 @@ export default {
       currentPage: 1,
       currentEvent: '',
       formInline: {
-        status: ''
+        status: 6
       },
       tableData: [],
       transPro: {
@@ -155,31 +253,110 @@ export default {
         evtStatus: null
       },
       fullscreenLoading: false,
-      AdminBalance: null
+      AdminBalance: null,
+      pageSize: 1,
+      pageNum: 1,
+      totalAmout: 0,
+      withdrawData: {}
     }
   },
   methods: {
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    exportToExcel(arr) {
+      //excel数据导出
+      const tHeader = [
+        'Event Name',
+        'Token Type',
+        'address',
+        'amount',
+        'TxHash',
+        'Transaction Time',
+        'Status',
+        'Log'
+      ]
+      const filterVal = [
+        'EventType',
+        'TokenType',
+        'Address',
+        'Amount',
+        'TxHash',
+        'TxTime',
+        'TxResult',
+        'ErrorDetail'
+      ]
+      const data = this.formatJson(filterVal, arr)
+      export_json_to_excel(tHeader, data, moment().format('X'))
+    },
+    handlerExport() {
+      if (!this.currentEvent) {
+        return this.$message({
+          type: 'error',
+          message: 'Please select event name'
+        })
+      }
+      let params = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        pageNum: 0,
+        pageSize: 0,
+        status: 6
+      }
+      this.getTableData(params, true)
+    },
+    handleSelectChange() {
+      if (!this.currentEvent) {
+        return this.$message({
+          type: 'error',
+          message: 'Please select event name'
+        })
+      }
+      this.pageNum = 1
+      this.currentPage = 1
+      let params = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        status: this.formInline.status
+      }
+      this.getTableData(params)
+    },
     handlerCloseDialog(params) {
       this.dialogFormVisible = params
-      clearInterval(this.timer)
+      this.getBalance()
     },
-    withdrew() {
+    withdrew(data) {
+      this.withdrawData = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        tokenType: data
+      }
       this.dialogFormVisible = true
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
-      this.currentPage = 1
-      this.pageSize = val
+      // this.currentPage = 1
+      // this.pageSize = val
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.currentPage = val
+      let params = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        pageNum: val,
+        pageSize: this.pageSize,
+        status: this.formInline.status
+      }
+      this.getTableData(params)
     },
     async queryTransPro() {
       if (!this.currentEvent) {
-        this.$message({
+        return this.$message({
           type: 'error',
-          message: '请先选择一个事件！'
+          message: 'Please select event name'
         })
       }
       try {
@@ -192,12 +369,24 @@ export default {
           this.transPro = { ...apires.Result }
         }
       } catch (error) {}
+      this.getBalance()
+      this.tableData = []
+      this.pageNum = 1
+      this.formInline.status = 6
+      let params = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        status: this.formInline.status
+      }
+      this.getTableData(params)
     },
     async handlerStart() {
       if (!this.currentEvent) {
-        this.$message({
+        return this.$message({
           type: 'error',
-          message: '请先选择一个事件！'
+          message: 'Please select event name'
         })
       }
       let params = {
@@ -209,10 +398,8 @@ export default {
           netType: this.netType
         }
       }
-      this.fullscreenLoading = true
       try {
         let apires = await this.$http.startTransfer(params)
-        this.fullscreenLoading = false
         const { Desc, Error, Result } = apires
         if (Desc !== 'SUCCESS' || Error !== 1) {
           return this.$message({
@@ -225,7 +412,6 @@ export default {
           message: '已开始转账'
         })
       } catch (error) {
-        this.fullscreenLoading = false
         this.$message({
           type: 'error',
           message: error
@@ -234,9 +420,9 @@ export default {
     },
     async getBalance() {
       if (!this.currentEvent) {
-        this.$message({
+        return this.$message({
           type: 'error',
-          message: '请先选择一个事件！'
+          message: 'Please select event name'
         })
       }
       try {
@@ -260,10 +446,47 @@ export default {
           message: error
         })
       }
+    },
+    async getTableData(params, isExpor = false) {
+      try {
+        let apires = await this.$http.getHistoryInfo(params)
+        console.log('apires', apires.Result.TxInfo)
+        if (apires.Error !== 1) {
+          let str = apires.Result || apires.Desc
+          return this.$message.error(str)
+        }
+        let arr = []
+        apires.Result.TxInfo.map((item, index) => {
+          arr.push({ ...item })
+        })
+        arr.map((item, index) => {
+          item.TxTime =
+            item.TxTime !== 0
+              ? moment(item.TxTime * 1000).format('YYYY-MM-DD hh:mm:ss')
+              : ''
+        })
+        console.log(arr)
+        if (!isExpor) {
+          this.tableData = [...arr]
+          this.totalAmout = apires.Result.Total
+        } else {
+          console.log('expor')
+          arr.map((item, index) => {
+            item.TxResult = filterAction(item.TxResult)
+          })
+          this.exportToExcel(arr)
+        }
+      } catch (error) {}
     }
   },
-  mounted() {
-    this.$store.dispatch('getEventList', this.netType)
+  async mounted() {
+    await this.$store.dispatch('getEventList')
+    if (this.successEvent) {
+      this.currentEvent = this.successEvent
+      this.queryTransPro()
+    } else {
+      console.log(1111)
+    }
   }
 }
 </script>
@@ -282,7 +505,7 @@ export default {
   .label_title {
     padding: 10px 12px 10px 0;
     font-size: 12px;
-    line-height: 14px;
+    line-height: 24px;
     min-height: 45px;
     width: 190px;
     padding-right: 20px;
