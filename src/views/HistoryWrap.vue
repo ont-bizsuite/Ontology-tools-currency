@@ -409,7 +409,7 @@ export default {
         }
         return this.$message({
           type: 'success',
-          message: '已开始转账'
+          message: 'Transfer started'
         })
       } catch (error) {
         this.$message({
@@ -484,8 +484,6 @@ export default {
     if (this.successEvent) {
       this.currentEvent = this.successEvent
       this.queryTransPro()
-    } else {
-      console.log(1111)
     }
   }
 }

@@ -61,14 +61,20 @@
       <div class="form_area">
         <div class="ele_item">
           <div class="lable_title">{{ $t('wraps.fileTitle') }}</div>
-          <div class="input_area" @click="submitForm">
+          <div class="input_area">
             <div class="input_temp">
-              <span v-if="!fileName" class="placehodel">{{
-                $t('wraps.filePlace')
-              }}</span>
-              <span v-else class="file_name">{{ fileName }}</span>
+              <span
+                v-if="!fileName"
+                @click.stop="submitForm"
+                class="placehodel"
+                >{{ $t('wraps.filePlace') }}</span
+              >
+              <div class="file_wraps" v-else>
+                <span class="file_name">{{ fileName }}</span>
+                <span @click.stop="clearFile" class="clearFileBtn">x</span>
+              </div>
             </div>
-            <span class="upload_icon"></span>
+            <span class="upload_icon" @click.stop="submitForm"></span>
           </div>
           <input
             type="file"
@@ -79,7 +85,7 @@
           />
         </div>
         <div class="ele_item" style="margin-top: 26px">
-          <ul class="data_nav">
+          <!-- <ul class="data_nav">
             <li>
               <div>
                 <span class="tbTitle">
@@ -109,10 +115,80 @@
               }}</span
               ><span v-else>{{ TotalData }}</span>
             </li>
-          </ul>
+          </ul> -->
           <!-- <span class="eye_icon"></span> -->
+          <div class="table">
+            <div class="table-tr">
+              <div class="table-th">
+                <div class="data_ele">
+                  <span class="tbTitle">
+                    {{ $t('wraps.totalAmout') }}
+                  </span>
+                  :
+                  <span class="all_width" v-if="!TotalCoin">{{
+                    $t('wraps.noData')
+                  }}</span>
+                  <span class="all_width" v-else>{{ TotalCoin }}</span>
+                </div>
+              </div>
+              <div class="table-th">
+                <div class="data_ele">
+                  <span class="tbTitle">
+                    {{ $t('wraps.transFee') }}
+                  </span>
+                  :
+                  <span class="all_width" v-if="!TotalFee">{{
+                    $t('wraps.noData')
+                  }}</span>
+                  <span class="all_width" v-else>{{ TotalFee }}</span>
+                </div>
+              </div>
+              <div class="table-th">
+                <div class="data_ele">
+                  <span class="tbTitle">
+                    {{ $t('wraps.feeType') }}
+                  </span>
+                  :
+                  <span class="all_width" v-if="!isShowTypeFee">{{
+                    $t('wraps.noData')
+                  }}</span>
+                  <span v-else>{{
+                    changeForm.tokenType === 'ERC20' ? 'ERC20' : 'ONG'
+                  }}</span>
+                </div>
+              </div>
+              <div class="table-th">
+                <div class="data_ele">
+                  <span class="tbTitle">
+                    {{ $t('wraps.totalTrans') }}
+                  </span>
+                  :
+                  <span class="all_width" v-if="!TotalData">{{
+                    $t('wraps.noData')
+                  }}</span>
+                  <span class="all_width" v-else>{{ TotalData }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="table-tr">  
+            <div class="table-td">广东</div>  
+            <div class="table-td">72812</div>  
+            <div class="table-td">8.0%</div>  
+        </div>  
+        <div class="table-tr">  
+            <div class="table-td">河南</div>  
+            <div class="table-td">37010</div>  
+            <div class="table-td">8.3%</div>  
+        </div>  
+        <div class="table-tr">  
+            <div class="table-td">江苏</div>  
+            <div class="table-td">70116</div>  
+            <div class="table-td">8.5%</div>  
+        </div>   -->
+          </div>
         </div>
       </div>
+
       <div class="table_wrap">
         <el-table
           :data="tableData"
@@ -302,6 +378,10 @@ export default {
     }
   },
   methods: {
+    clearFile() {
+      this.fileName = ''
+      this.$refs.upload.value = ''
+    },
     withdrew(data) {
       this.withdrawData = {
         eventType: this.currentEvent,
@@ -320,16 +400,7 @@ export default {
     submitForm() {
       this.$refs['ruleForm'].validate(async valid => {
         if (valid) {
-          // alert('submit!')
-          // console.log(event)
-          // await this.readExcel(event)
-          // this.$refs.upload.value = ''
-          // this.$refs.upload.addEventListener('change', async e => {
           this.$refs.upload.click()
-          //   await this.readExcel(e)
-          //   // this.$refs.upload.value = ''
-          //   // this.submitForm(e)
-          // })
         } else {
           console.log('error submit!!')
           return false
@@ -406,6 +477,7 @@ export default {
         this.fullscreenLoading = false
         if (apires.Error !== 1) {
           let str = apires.Result || apires.Desc
+          this.fileName = ''
           return this.$message.error(str)
         }
         // return
@@ -434,7 +506,7 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize
         })
-        return this.$message.success('上传成功！')
+        return this.$message.success('Uploaded successfully!')
       } catch (error) {
         this.fullscreenLoading = false
       }
@@ -475,7 +547,7 @@ export default {
       if (!this.changeForm.eventType) {
         return this.$message({
           type: 'error',
-          message: '请先上传数据或选择一个事件!'
+          message: 'Please upload data or select an event first!'
         })
       }
       this.fullscreenLoading = true
@@ -497,7 +569,7 @@ export default {
         this.AdminBalance = { ...Result }
         return this.$message({
           type: 'success',
-          message: '查询成功'
+          message: 'Search successful'
         })
       } catch (error) {
         this.fullscreenLoading = false
@@ -535,7 +607,7 @@ export default {
         this.$router.push({ name: 'HistoryWrap' })
         return this.$message({
           type: 'success',
-          message: '已开始转账'
+          message: 'Transfer started'
         })
       } catch (error) {
         this.fullscreenLoading = false
@@ -645,12 +717,33 @@ export default {
             padding-left: 17px;
             border: 1px solid rgba(0, 0, 0, 0.2);
             span.placehodel {
+              display: block;
+              width: 100%;
               font-size: 12px;
               color: rgba(30, 30, 30, 0.3);
             }
             span.file_name {
               color: #000;
               font-size: 12px;
+            }
+            .file_wraps {
+              display: flex;
+              width: 100%;
+              height: 45px;
+              justify-content: space-between;
+              align-items: center;
+              padding-right: 10px;
+              &:hover {
+                .clearFileBtn {
+                  visibility: visible;
+                  opacity: 0.6;
+                }
+              }
+              .clearFileBtn {
+                visibility: hidden;
+                opacity: 0;
+                transition: all 0.6s;
+              }
             }
           }
         }
@@ -852,5 +945,54 @@ span.depl_btn {
 .ont-page {
   text-align: right;
   margin-top: 30px;
+}
+
+.table,
+.table * {
+  margin: 0 auto;
+  padding: 0;
+  font-size: 14px;
+}
+.table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-tr {
+  display: table-row;
+  height: 30px;
+}
+.table-th {
+  font-size: 12px;
+  width: 25%;
+  display: table-cell;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+  padding: 14px 12px;
+  .data_ele {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .tbTitle {
+      max-width: 70px;
+      font-size: 12px;
+      font-weight: bold;
+      padding-right: 4px;
+    }
+    .all_width {
+      padding-left: 4px;
+      flex: 1;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
+}
+.table-td {
+  display: table-cell;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  text-align: center;
+  vertical-align: middle;
 }
 </style>
