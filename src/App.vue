@@ -42,6 +42,9 @@ export default {
 </script>
 
 <style lang="less">
+#nprogress .bar {
+  background: #1787eb !important; //自定义颜色
+}
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
