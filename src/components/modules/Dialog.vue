@@ -106,3 +106,20 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+/deep/ .el-form {
+  .el-form-item__content {
+    .el-input__inner {
+      border-radius: 0;
+      height: 45px;
+      padding: 12px;
+      line-height: 19px;
+    }
+    .el-input.is-active .el-input__inner,
+    .el-input__inner:focus {
+      border-color: rgba(0, 0, 0, 0.5) !important;
+    }
+  }
+}
+</style>

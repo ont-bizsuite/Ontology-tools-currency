@@ -62,6 +62,7 @@ export default {
 .el-select-dropdown__item.selected {
   color: #000 !important;
 }
+
 </style>
 <style lang="less" scoped>
 .home_layout {

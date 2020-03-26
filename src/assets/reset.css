@@ -195,7 +195,7 @@ html {
 .hover1 {
   transition: all 0.5s;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
@@ -212,7 +212,7 @@ html {
   width: 5px;
   background-color: rgba(125, 125, 125, 0.7);
   -webkit-border-radius: 6px;
-}
+} */
 .account_wrap {
   width: 100%;
   height: 100%;

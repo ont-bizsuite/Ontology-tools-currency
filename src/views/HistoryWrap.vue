@@ -135,9 +135,9 @@
             </span></template
           >
         </el-table-column>
-        <el-table-column fixed prop="TokenType" label="Token Type" width="120">
+        <el-table-column fixed prop="TokenType" align="center" label="Token Type" width="120">
         </el-table-column>
-        <el-table-column prop="Amount" label="Token Amount" width="120">
+        <el-table-column prop="Amount" align="center" label="Token Amount" width="120">
         </el-table-column>
         <el-table-column prop="Address" label="Address" width="320">
         </el-table-column>
@@ -149,7 +149,8 @@
           prop="TxResult"
           label="Status"
           fixed="right"
-          width="87"
+          width="190"
+          align="center"
         >
           <template slot-scope="scope">
             <el-tag
@@ -656,6 +657,9 @@ export default {
 }
 /deep/.el-input__inner {
   border-radius: 0;
+  height: 45px;
+  padding: 12px;
+  line-height: 19px;
 }
 .search_select {
   // text-align: right;
