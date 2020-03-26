@@ -281,7 +281,7 @@
             <input type="text" v-model="TotalFee" disabled placeholder="" />
           </div>
         </div>
-        <div class="ele_item">
+        <div class="ele_item balance_wraps">
           <div class="lable_title">
             {{ $t('wraps.currentBal') }}
           </div>
@@ -466,7 +466,6 @@ export default {
       return num.toFixed(18).replace(/\.?0+$/, '')
     },
     readExcel(e) {
-      this.resetData()
       //表格导入
       var that = this
       const files = e.target.files
@@ -636,7 +635,7 @@ export default {
         this.AdminBalance = { ...Result }
         return this.$message({
           type: 'success',
-          message: 'Search successful'
+          message: 'Update Balance Success!'
         })
       } catch (error) {
         this.fullscreenLoading = false
@@ -750,6 +749,10 @@ export default {
       margin-top: 60px;
     }
   }
+  .step3_wrap,
+  .step2_wrap {
+    padding-top: 100px;
+  }
   .step1_wrap {
     .form_area {
       margin-bottom: 60px;
@@ -769,6 +772,7 @@ export default {
     transition: all 0.5s;
     &:hover {
       background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.6);
     }
   }
   .step2_wrap {
@@ -924,6 +928,8 @@ export default {
           justify-content: flex-start;
           flex-direction: column;
           height: auto;
+          border-right: 1px solid rgba(0, 0, 0, 0.2);
+          padding-right: 26px;
           .balanceType {
             width: 100%;
             height: 45px;
@@ -940,6 +946,12 @@ export default {
               font-weight: 600;
               line-height: 17px;
               background: #f5f7f6;
+            }
+            span.depl_btn {
+              &:hover {
+                background: #fafafa;
+                border: 1px solid rgba(0, 0, 0, 0.6);
+              }
             }
             &:nth-last-of-type(1) {
               margin-bottom: 0;
@@ -958,6 +970,7 @@ export default {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          margin-top: 6px;
           span {
             width: 104px;
             height: 33px;
@@ -972,12 +985,16 @@ export default {
             transition: all 0.5s;
             &:hover {
               background: #fafafa;
+              border: 1px solid rgba(0, 0, 0, 0.6);
             }
           }
           span.depl_btn {
             color: #48a3ff;
           }
         }
+      }
+      .balance_wraps.ele_item {
+        align-items: flex-start;
       }
     }
   }
@@ -1019,7 +1036,7 @@ span.depl_btn {
   }
 }
 .starts_btn {
-  margin: 16px 0 120px;
+  margin: 60px 0 120px;
   height: 45px;
   background: rgba(72, 163, 255, 1);
   color: #fff;
@@ -1027,7 +1044,9 @@ span.depl_btn {
   line-height: 45px;
   text-align: center;
   transition: all 0.6s;
+  font-weight: 600;
   cursor: pointer;
+  border-radius: 22.5px;
   &:hover {
     opacity: 0.8;
   }

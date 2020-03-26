@@ -37,7 +37,12 @@
         </div>
       </div>
       <div class="search_area">
-        <div class="btns" @click="queryTransPro">{{ $t('history.query') }}</div>
+        <div
+          :class="$i18n.locale === 'en' ? 'btns enwidth' : 'btns'"
+          @click="queryTransPro"
+        >
+          {{ $t('history.query') }}
+        </div>
       </div>
     </div>
     <div class="his_area2">
@@ -53,7 +58,12 @@
         </li>
       </ul>
       <div class="search_area">
-        <div class="btns" @click="handlerStart">{{ $t('history.refer') }}</div>
+        <div
+          :class="$i18n.locale === 'en' ? 'btns enwidth' : 'btns'"
+          @click="handlerStart"
+        >
+          {{ $t('history.refer') }}
+        </div>
       </div>
     </div>
     <div class="his_area3">
@@ -135,15 +145,34 @@
             </span></template
           >
         </el-table-column>
-        <el-table-column fixed prop="TokenType" align="center" label="Token Type" width="120">
+        <el-table-column
+          fixed
+          prop="TokenType"
+          align="center"
+          label="Token Type"
+          width="120"
+        >
         </el-table-column>
-        <el-table-column prop="Amount" align="center" label="Token Amount" width="120">
+        <el-table-column
+          prop="Amount"
+          align="center"
+          label="Token Amount"
+          width="120"
+        >
         </el-table-column>
-        <el-table-column prop="Address" label="Address" width="320">
+        <el-table-column prop="Address" label="Address" width="150">
+          <template slot-scope="scope">
+            {{ scope.row.Address | subStr }}
+            <i @click="doCopy(scope.row.Address)" class="copyIcon"></i>
+          </template>
         </el-table-column>
-        <el-table-column prop="TxHash" label="Txhash" width="320">
+        <el-table-column prop="TxHash" label="Txhash" width="150">
+          <template slot-scope="scope">
+            {{ scope.row.TxHash | subStr }}
+            <i @click="doCopy(scope.row.TxHash)" class="copyIcon"></i>
+          </template>
         </el-table-column>
-        <el-table-column prop="TxTime" label="Transaction Time" width="220">
+        <el-table-column prop="TxTime" label="Transaction Time" width="200">
         </el-table-column>
         <el-table-column
           prop="TxResult"
@@ -478,6 +507,20 @@ export default {
           this.exportToExcel(arr)
         }
       } catch (error) {}
+    },
+    doCopy(m) {
+      this.$copyText(m)
+      this.$message.success('copied')
+    }
+  },
+  filters: {
+    subStr(str) {
+      if (!str) {
+        return ''
+      }
+      return str.length > 12
+        ? str.substring(0, 7) + '......' + str.substring(str.length - 5)
+        : str
     }
   },
   async mounted() {
@@ -605,10 +648,14 @@ export default {
     line-height: 18px;
     padding: 8px 22px;
     cursor: pointer;
+    font-weight: 600;
     transition: all 0.5s;
     &:hover {
       opacity: 0.8;
     }
+  }
+  .enwidth.btns {
+    min-width: 180px;
   }
 }
 .his_area2 {
@@ -639,6 +686,7 @@ export default {
   margin-top: 50px;
 }
 .no_colors {
+  min-width: 124px;
   padding: 8px 28px;
   font-size: 12px;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -648,7 +696,9 @@ export default {
   margin-left: 40px;
   cursor: pointer;
   transition: all 0.6s;
+  text-align: center;
   &:hover {
+    border: 1px solid rgba(0, 0, 0, 0.6);
     background: #fafafa;
   }
 }
@@ -679,10 +729,23 @@ export default {
   font-size: 12px;
   padding: 14px 12px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 17px;
 }
 .inpress.btype {
   background: #f5f7f6;
+}
+i.copyIcon {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: url(../assets/copy.svg) no-repeat center;
+  background-size: contain;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: all 0.5s;
+  &:hover {
+    opacity: 0.8;
+  }
 }
 </style>

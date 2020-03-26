@@ -15,10 +15,17 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">{{ $t('dialog.cancal') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{
-          $t('dialog.confirm')
+        <el-button round @click="handleClose">{{
+          $t('dialog.cancal')
         }}</el-button>
+        <el-button
+          style="margin-left: 20px"
+          round
+          type="primary"
+          @click="submitForm"
+          :loading="Loading"
+          >{{ $t('dialog.confirm') }}</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -41,6 +48,7 @@ export default {
   data() {
     return {
       //   dialogFormVisible: true,
+      Loading: false,
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -50,7 +58,7 @@ export default {
       ruleForm: {
         address: ''
       },
-      formLabelWidth: '200px'
+      formLabelWidth: '160px'
     }
   },
   methods: {
@@ -78,11 +86,12 @@ export default {
         }
       }
       console.log(params)
-
+      this.Loading = true
       try {
         let apiRes = await this.$http.withDraw(params)
         console.log(apiRes)
         const { Desc, Error, Result } = apiRes
+        this.Loading = false
         if (Desc !== 'SUCCESS' && Error !== 1) {
           this.handleClose()
           return this.$message({
@@ -96,6 +105,7 @@ export default {
         })
         this.handleClose()
       } catch (error) {
+        this.Loading = false
         this.handleClose()
         return this.$message({
           type: 'error',

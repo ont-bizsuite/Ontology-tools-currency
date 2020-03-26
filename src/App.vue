@@ -62,7 +62,48 @@ export default {
 .el-select-dropdown__item.selected {
   color: #000 !important;
 }
-
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: #f5f6f7 !important;
+}
+.el-pagination {
+  padding: 0 !important;
+  .el-pagination__jump {
+    margin-left: 40px;
+    .el-pagination__editor {
+      padding-right: 0;
+      margin-right: 0;
+      margin-left: 10px;
+    }
+    .el-input {
+      width: auto;
+      min-width: 75px;
+    }
+    .el-input__inner {
+      padding: 0 8px;
+    }
+  }
+  .el-icon {
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+.el-table {
+  tr {
+    th {
+      .cell {
+        font-size: 12px;
+      }
+    }
+  }
+  td {
+    .cell {
+      font-size: 12px;
+    }
+  }
+}
 </style>
 <style lang="less" scoped>
 .home_layout {
@@ -94,6 +135,19 @@ export default {
   .el-form-item__label {
     font-size: 12px;
     color: rgba(0, 0, 0, 1);
+  }
+  .el-dialog__header {
+    padding: 40px 60px 10px;
+  }
+  .el-dialog__body {
+    padding: 50px 60px;
+  }
+  .el-dialog__headerbtn {
+    top: 40px;
+    right: 60px;
+  }
+  .el-dialog__footer {
+    padding: 10px 60px 40px;
   }
 }
 </style>

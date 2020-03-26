@@ -19,6 +19,9 @@ import zhLang from './lang/zh'
 
 import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 
 Vue.prototype.$http = http
 
