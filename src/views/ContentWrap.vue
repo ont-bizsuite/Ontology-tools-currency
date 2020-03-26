@@ -347,18 +347,18 @@ export default {
             max: 18,
             pattern: /^[\S]{2,18}$/,
             required: true,
-            message: '长度为2～18个字符，且不能有空格!',
+            message: 'The length is 2 to 18 characters, and there must be no spaces!',
             trigger: 'change'
           }
         ],
         tokenType: [
-          { required: true, message: '请选择 Token 类型', trigger: 'change' }
+          { required: true, message: 'Please select Token Type', trigger: 'change' }
         ],
         contractAddress: [
           {
             pattern: /\S/,
             required: true,
-            message: '请输入合约地址',
+            message: 'Please enter contract address',
             trigger: 'change'
           }
         ]
