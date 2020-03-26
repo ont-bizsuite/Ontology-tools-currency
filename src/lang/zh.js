@@ -26,7 +26,9 @@ export default {
     currentBal: '当前地址余额',
     refreBa: '刷新余额',
     withDrew: '提取余额',
-    startTrans: '开始转账'
+    startTrans: '开始转账',
+    orTip: '或者选择已有数据',
+    orTitle: '历史事件数据'
   },
   dialog: {
     mainTitle: '提取余额',

@@ -34,6 +34,7 @@ export default {}
       color: rgba(30, 30, 30, 1);
       cursor: pointer;
       transition: all 0.6s;
+      padding: 0 20px;
       &:hover {
         background: rgba(245, 247, 246, 1);
         color: #000;

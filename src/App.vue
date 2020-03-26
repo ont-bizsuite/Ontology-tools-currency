@@ -80,7 +80,7 @@ export default {
     overflow-y: auto;
     display: flex;
     .left_nav_wrap {
-      width: 104px;
+      min-width: 104px;
       border-right: 1px solid rgba(0, 0, 0, 0.2);
     }
     .right_content_wrap {

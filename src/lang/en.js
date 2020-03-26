@@ -26,7 +26,9 @@ export default {
     currentBal: 'Current balance',
     refreBa: 'Refresh',
     withDrew: 'Withdraw',
-    startTrans: 'Execute'
+    startTrans: 'Execute',
+    orTip: 'Or select existing data',
+    orTitle: 'Historical event data'
   },
   dialog: {
     mainTitle: 'Withdraw balance',

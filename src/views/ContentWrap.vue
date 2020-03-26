@@ -17,11 +17,12 @@
           ref="ruleForm"
           label-width="190px"
           class="demo-ruleForm"
+          :hide-required-asterisk="true"
         >
-          <el-form-item :label="$t('wraps.enentName')" prop="eventType">
+          <el-form-item :label="$t('wraps.enentName') + ' *'" prop="eventType">
             <el-input v-model="ruleForm.eventType"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('wraps.tokenType')" prop="tokenType">
+          <el-form-item :label="$t('wraps.tokenType') + ' *'" prop="tokenType">
             <el-select
               v-model="ruleForm.tokenType"
               :placeholder="$t('wraps.coinPlace')"
@@ -34,7 +35,7 @@
           </el-form-item>
           <el-form-item
             v-if="showTran"
-            :label="t('wraps.contr')"
+            :label="$t('wraps.contr')"
             prop="contractAddress"
           >
             <el-input v-model="ruleForm.contractAddress"></el-input>
@@ -46,6 +47,30 @@
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           </el-form-item> -->
         </el-form>
+      </div>
+
+      <!--  -->
+      <div class="his_title">
+        {{ $t('wraps.orTip') }}
+      </div>
+      <div class="history_ele">
+        <div class="label_title">{{ $t('wraps.orTitle') }}</div>
+        <div class="actions_areas">
+          <el-select
+            @change="handlerChanges"
+            v-model="currentEvent"
+            filterable
+            placeholder="Please select history event name"
+          >
+            <el-option
+              v-for="item in eventTypeList"
+              :key="item"
+              :label="item"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
       </div>
     </div>
     <div class="step2_wrap">
@@ -313,7 +338,8 @@ export default {
       }
     },
     ...mapState({
-      netType: state => state.netType
+      netType: state => state.netType,
+      eventTypeList: state => state.eventTypeList
     }),
     dataParams() {
       return {
@@ -347,12 +373,17 @@ export default {
             max: 18,
             pattern: /^[\S]{2,18}$/,
             required: true,
-            message: 'The length is 2 to 18 characters, and there must be no spaces!',
+            message:
+              'The length is 2 to 18 characters, and there must be no spaces!',
             trigger: 'change'
           }
         ],
         tokenType: [
-          { required: true, message: 'Please select Token Type', trigger: 'change' }
+          {
+            required: true,
+            message: 'Please select Token Type',
+            trigger: 'change'
+          }
         ],
         contractAddress: [
           {
@@ -374,10 +405,21 @@ export default {
       currentPage: 1,
       pageSize: 1,
       pageNum: 1,
-      withdrawData: {}
+      withdrawData: {},
+      currentEvent: ''
     }
   },
   methods: {
+    handlerChanges() {
+      this.currentPage = 1
+      let params = {
+        eventType: this.currentEvent,
+        netType: this.netType,
+        pageNum: 1,
+        pageSize: this.pageSize
+      }
+      this.getTableData(params, true)
+    },
     clearFile() {
       this.fileName = ''
       this.$refs.upload.value = ''
@@ -424,6 +466,7 @@ export default {
       return num.toFixed(18).replace(/\.?0+$/, '')
     },
     readExcel(e) {
+      this.resetData()
       //表格导入
       var that = this
       const files = e.target.files
@@ -526,7 +569,7 @@ export default {
         pageSize: this.pageSize
       })
     },
-    async getTableData(data) {
+    async getTableData(data, isHistory = false) {
       this.tableLoading = true
       try {
         let apires = await this.$http.queryTableData(data)
@@ -538,6 +581,30 @@ export default {
         }
         this.tableData = apires.Result.bill_list
         this.TotalData = apires.Result.Total
+        if (isHistory) {
+          const {
+            bill_list,
+            token_type,
+            admin,
+            estimate_fee,
+            Sum,
+            AdminBalance,
+            Total,
+            event_type,
+            contract_address
+          } = apires.Result
+          this.isShowTypeFee = true
+          this.tokenAddress = admin
+          this.TotalFee = estimate_fee
+          this.TotalCoin = Sum
+          this.AdminBalance = AdminBalance
+          this.ruleForm.tokenType = token_type
+          this.ruleForm.contractAddress = contract_address
+          this.ruleForm.eventType = event_type
+          this.changeForm.eventType = event_type
+          this.changeForm.tokenType = token_type
+          this.changeForm.contractAddress = contract_address
+        }
       } catch (error) {
         this.tableLoading = false
         this.$message.error(error)
@@ -580,6 +647,12 @@ export default {
       }
     },
     async handlerStart() {
+      if (!this.changeForm.eventType) {
+        return this.$message({
+          type: 'error',
+          message: 'Please upload data or select history event'
+        })
+      }
       let params = {
         id: 1,
         jsonrpc: '2.0',
@@ -616,9 +689,24 @@ export default {
           message: error
         })
       }
+    },
+    resetData() {
+      this.billList = []
+      this.AdminBalance = null
+      this.tokenAddress = ''
+      this.TotalCoin = ''
+      this.TotalFee = ''
+      this.TotalData = 0
+      this.isShowTypeFee = false
+      this.changeForm = { eventType: '', tokenType: '', contractAddress: '' }
+      this.currentPage = 1
+      this.pageNum = 1
+      this.currentEvent = ''
+      this.tableData = []
     }
   },
-  mounted() {
+  async mounted() {
+    await this.$store.dispatch('getEventList')
     this.$refs.upload.addEventListener('change', async e => {
       await this.readExcel(e)
       this.$refs.upload.value = ''
@@ -660,6 +748,11 @@ export default {
     }
     .form_area {
       margin-top: 60px;
+    }
+  }
+  .step1_wrap {
+    .form_area {
+      margin-bottom: 60px;
     }
   }
   span.template_btn {
@@ -994,5 +1087,38 @@ span.depl_btn {
   border: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
   vertical-align: middle;
+}
+.his_title {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+}
+.history_ele {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  .label_title {
+    padding: 10px 12px 10px 0;
+    font-size: 12px;
+    line-height: 24px;
+    min-height: 45px;
+    width: 190px;
+    padding-right: 20px;
+    font-weight: 600;
+  }
+  .actions_areas {
+    flex: 1;
+    height: 45px;
+  }
+}
+/deep/ .el-select {
+  .el-input__inner {
+    border-radius: 0;
+    height: 45px;
+    padding: 12px;
+    line-height: 19px;
+  }
 }
 </style>
