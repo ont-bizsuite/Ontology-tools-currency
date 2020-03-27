@@ -147,9 +147,9 @@
               <div class="table-th">
                 <div class="data_ele">
                   <span class="tbTitle">
-                    {{ $t('wraps.totalAmout') }}
+                    {{ $t('wraps.totalAmout') }}:
                   </span>
-                  :
+                  
                   <span class="all_width" v-if="!TotalCoin">{{
                     $t('wraps.noData')
                   }}</span>
@@ -159,9 +159,9 @@
               <div class="table-th">
                 <div class="data_ele">
                   <span class="tbTitle">
-                    {{ $t('wraps.transFee') }}
+                    {{ $t('wraps.transFee') }}:
                   </span>
-                  :
+                  
                   <span class="all_width" v-if="!TotalFee">{{
                     $t('wraps.noData')
                   }}</span>
@@ -171,9 +171,9 @@
               <div class="table-th">
                 <div class="data_ele">
                   <span class="tbTitle">
-                    {{ $t('wraps.feeType') }}
+                    {{ $t('wraps.feeType') }}:
                   </span>
-                  :
+                  
                   <span class="all_width" v-if="!isShowTypeFee">{{
                     $t('wraps.noData')
                   }}</span>
@@ -185,9 +185,9 @@
               <div class="table-th">
                 <div class="data_ele">
                   <span class="tbTitle">
-                    {{ $t('wraps.totalTrans') }}
+                    {{ $t('wraps.totalTrans') }}:
                   </span>
-                  :
+                  
                   <span class="all_width" v-if="!TotalData">{{
                     $t('wraps.noData')
                   }}</span>
@@ -753,7 +753,7 @@ export default {
       align-items: center;
       span {
         font-size: 18px;
-        color: rgba(30, 30, 30, 1);
+        color: rgba(0, 0, 0, 0.6);
       }
     }
     .form_area {
@@ -1091,23 +1091,29 @@ span.depl_btn {
   display: table-cell;
   height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  vertical-align: middle;
+  vertical-align: top;
   padding: 14px 12px;
   .data_ele {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     .tbTitle {
-      max-width: 70px;
+      width: 100%;
+      text-align: left;
+      // max-width: 70px;
       font-size: 12px;
       font-weight: bold;
       padding-right: 4px;
+      margin-bottom: 10px;
     }
     .all_width {
-      padding-left: 4px;
-      flex: 1;
+      // padding-left: 4px;
+      // flex: 1;
+      width: 100%;
+      text-align: left;
       font-size: 12px;
-      font-weight: bold;
+      // font-weight: bold;
     }
   }
 }
@@ -1123,6 +1129,7 @@ span.depl_btn {
   font-size: 14px;
   margin-bottom: 30px;
   padding-top: 20px;
+  color: rgba(0, 0, 0, 0.6);;
 }
 .history_ele {
   display: flex;

@@ -29,7 +29,7 @@ export default {}
       height: 60px;
       line-height: 60px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-      text-align: center;
+      text-align: left;
       font-size: 12px;
       color: rgba(30, 30, 30, 1);
       cursor: pointer;

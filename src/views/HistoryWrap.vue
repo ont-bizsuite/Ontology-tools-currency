@@ -137,7 +137,7 @@
         </div>
       </div>
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column fixed label="Index" align="center" width="70">
+        <el-table-column fixed label="Index" align="left" width="58">
           <template scope="scope"
             ><span
               >{{ scope.$index + (currentPage - 1) * pageSize + 1 }}
@@ -147,38 +147,51 @@
         <el-table-column
           fixed
           prop="TokenType"
-          align="center"
+          align="left"
           label="Token Type"
-          width="120"
+          width="96"
         >
         </el-table-column>
         <el-table-column
           prop="Amount"
-          align="center"
+          align="left"
           label="Token Amount"
-          width="120"
+          width="112"
         >
+          <template slot-scope="scope">
+            <div style="text-align: right; padding-right:2px">
+              {{ scope.row.Amount }}
+            </div>
+          </template>
         </el-table-column>
-        <el-table-column prop="Address" label="Address" width="150">
+        <el-table-column prop="Address" label="Address" width="130">
           <template slot-scope="scope">
             {{ scope.row.Address | subStr }}
-            <i v-if="scope.row.Address" @click="doCopy(scope.row.Address)" class="copyIcon"></i>
+            <i
+              v-if="scope.row.Address"
+              @click="doCopy(scope.row.Address)"
+              class="copyIcon"
+            ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="TxHash" label="Txhash" width="150">
+        <el-table-column prop="TxHash" label="Txhash" width="130">
           <template slot-scope="scope">
             {{ scope.row.TxHash | subStr }}
-            <i v-if="scope.row.TxHash" @click="doCopy(scope.row.TxHash)" class="copyIcon"></i>
+            <i
+              v-if="scope.row.TxHash"
+              @click="doCopy(scope.row.TxHash)"
+              class="copyIcon"
+            ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="TxTime" label="Transaction Time" width="200">
+        <el-table-column prop="TxTime" label="Transaction Time" width="129">
         </el-table-column>
         <el-table-column
           prop="TxResult"
           label="Status"
           fixed="right"
           width="190"
-          align="center"
+          align="left"
         >
           <template slot-scope="scope">
             <el-tag
@@ -518,7 +531,7 @@ export default {
         return ''
       }
       return str.length > 12
-        ? str.substring(0, 7) + '......' + str.substring(str.length - 5)
+        ? str.substring(0, 5) + '...' + str.substring(str.length - 5)
         : str
     }
   },
@@ -682,6 +695,10 @@ export default {
       line-height: 17px;
       &:nth-last-of-type(1) {
         border-right: none;
+      }
+      span {
+        margin-left: 4px;
+        font-weight: 400;
       }
     }
   }

@@ -95,10 +95,13 @@ export default {
     th {
       .cell {
         font-size: 12px;
+        font-weight: 600;
       }
     }
   }
   td {
+      padding: 9px 0 !important;
+    
     .cell {
       font-size: 12px;
     }
