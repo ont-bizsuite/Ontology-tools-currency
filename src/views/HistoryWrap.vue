@@ -67,12 +67,11 @@
       </div>
     </div>
     <div class="his_area3">
-      <div class="ele_item">
+      <div class="ele_item balance_layout">
         <div class="label_title">
           {{ $t('history.adminBa') }}
         </div>
         <div class="input_area balance_wrap">
-          <!-- <input type="text" disabled placeholder="adsfasdfasdf" /> -->
           <div class="balance_item">
             <ul v-if="AdminBalance">
               <li v-for="(item, key) in AdminBalance" :key="key">
@@ -163,13 +162,13 @@
         <el-table-column prop="Address" label="Address" width="150">
           <template slot-scope="scope">
             {{ scope.row.Address | subStr }}
-            <i @click="doCopy(scope.row.Address)" class="copyIcon"></i>
+            <i v-if="scope.row.Address" @click="doCopy(scope.row.Address)" class="copyIcon"></i>
           </template>
         </el-table-column>
         <el-table-column prop="TxHash" label="Txhash" width="150">
           <template slot-scope="scope">
             {{ scope.row.TxHash | subStr }}
-            <i @click="doCopy(scope.row.TxHash)" class="copyIcon"></i>
+            <i v-if="scope.row.TxHash" @click="doCopy(scope.row.TxHash)" class="copyIcon"></i>
           </template>
         </el-table-column>
         <el-table-column prop="TxTime" label="Transaction Time" width="200">
@@ -604,6 +603,8 @@ export default {
             background: #f5f7f6;
           }
           .btn_balance {
+            min-width: 124px;
+            text-align: center;
             padding: 8px 28px;
             font-size: 12px;
             border: 1px solid rgba(0, 0, 0, 0.2);
@@ -616,6 +617,7 @@ export default {
             color: #48a3ff;
             &:hover {
               background: #fafafa;
+              border: 1px solid rgba(0, 0, 0, 1);
             }
           }
           &:nth-last-of-type(1) {
@@ -633,6 +635,9 @@ export default {
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
+}
+.balance_layout.ele_item {
+  align-items: flex-start;
 }
 .search_area {
   display: flex;

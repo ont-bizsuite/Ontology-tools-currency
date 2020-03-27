@@ -635,7 +635,7 @@ export default {
         this.AdminBalance = { ...Result }
         return this.$message({
           type: 'success',
-          message: 'Update Balance Success!'
+          message: 'Balance updated successfully!'
         })
       } catch (error) {
         this.fullscreenLoading = false
@@ -731,7 +731,18 @@ export default {
         font-weight: 600;
         color: rgba(30, 30, 30, 1);
         line-height: 50px;
-        border-bottom: 3px solid #000;
+        // border-bottom: 3px solid #000;
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 100%;
+            height: 3px;
+            background: #000;
+            border-radius: 1.5px;
+        }
       }
       margin-bottom: 20px;
     }
