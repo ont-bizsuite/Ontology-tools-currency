@@ -437,7 +437,7 @@ export default {
       this.getBalance()
     },
     download() {
-      window.open('http://172.168.3.174/template.xlsx', '_blank')
+      window.open('./template.xlsx', '_blank')
     },
     submitForm() {
       this.$refs['ruleForm'].validate(async valid => {
