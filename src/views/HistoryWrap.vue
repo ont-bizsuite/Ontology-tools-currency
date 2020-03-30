@@ -296,7 +296,7 @@ export default {
       },
       fullscreenLoading: false,
       AdminBalance: null,
-      pageSize: 1,
+      pageSize: 10,
       pageNum: 1,
       totalAmout: 0,
       withdrawData: {}

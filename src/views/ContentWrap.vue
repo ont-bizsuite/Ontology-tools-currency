@@ -241,7 +241,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="1"
+            :page-size="pageSize"
             layout="total, prev, pager, next, jumper"
             :total="TotalData"
           >
@@ -403,7 +403,7 @@ export default {
       TotalData: 0,
       changeForm: { eventType: '', tokenType: '', contractAddress: '' },
       currentPage: 1,
-      pageSize: 1,
+      pageSize: 10,
       pageNum: 1,
       withdrawData: {},
       currentEvent: ''
