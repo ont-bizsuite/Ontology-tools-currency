@@ -164,7 +164,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="Address" label="Address" width="130">
+        <el-table-column prop="Address" label="Address" width="150">
           <template slot-scope="scope">
             {{ scope.row.Address | subStr }}
             <i
@@ -174,7 +174,7 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="TxHash" label="Txhash" width="130">
+        <el-table-column prop="TxHash" label="Txhash" width="150">
           <template slot-scope="scope">
             {{ scope.row.TxHash | subStr }}
             <i
@@ -184,7 +184,7 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="TxTime" label="Transaction Time" width="129">
+        <el-table-column prop="TxTime" label="Transaction Time" width="150">
         </el-table-column>
         <el-table-column
           prop="TxResult"

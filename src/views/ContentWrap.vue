@@ -61,6 +61,8 @@
             v-model="currentEvent"
             filterable
             placeholder="Please select history event name"
+            clearable
+            @clear="clearSelect"
           >
             <el-option
               v-for="item in eventTypeList"
@@ -178,7 +180,7 @@
                     $t('wraps.noData')
                   }}</span>
                   <span v-else>{{
-                    changeForm.tokenType === 'ERC20' ? 'ERC20' : 'ONG'
+                    changeForm.tokenType === 'ERC20' ? 'ETH' : 'ONG'
                   }}</span>
                 </div>
               </div>
@@ -371,10 +373,10 @@ export default {
           {
             min: 2,
             max: 18,
-            pattern: /^[\S]{2,18}$/,
+            pattern: /^[\S][^_]{2,18}$/,
             required: true,
             message:
-              'The length is 2 to 18 characters, and there must be no spaces!',
+              '2 to 18 characters, cannot be empty and contain no underscores!',
             trigger: 'change'
           }
         ],
@@ -411,6 +413,9 @@ export default {
   },
   methods: {
     handlerChanges() {
+      if (!this.currentEvent) {
+        return this.resetData()
+      }
       this.currentPage = 1
       let params = {
         eventType: this.currentEvent,
@@ -633,10 +638,7 @@ export default {
           })
         }
         this.AdminBalance = { ...Result }
-        return this.$message({
-          type: 'success',
-          message: 'Balance updated successfully!'
-        })
+        return true
       } catch (error) {
         this.fullscreenLoading = false
         return this.$message({
@@ -702,6 +704,9 @@ export default {
       this.pageNum = 1
       this.currentEvent = ''
       this.tableData = []
+    },
+    clearSelect() {
+      // console.log(11111)
     }
   },
   async mounted() {
