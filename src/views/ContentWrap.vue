@@ -48,8 +48,6 @@
           </el-form-item> -->
         </el-form>
       </div>
-
-      <!--  -->
       <div class="his_title">
         {{ $t('wraps.orTip') }}
       </div>
@@ -112,46 +110,12 @@
           />
         </div>
         <div class="ele_item" style="margin-top: 26px">
-          <!-- <ul class="data_nav">
-            <li>
-              <div>
-                <span class="tbTitle">
-                  {{ $t('wraps.totalAmout') }}
-                </span>
-                ：<span v-if="!TotalCoin">{{ $t('wraps.noData') }}</span>
-                <span v-else>{{ TotalCoin }}</span>
-              </div>
-            </li>
-            <li>
-              {{ $t('wraps.transFee') }}：<span v-if="!TotalFee">{{
-                $t('wraps.noData')
-              }}</span
-              ><span v-else>{{ TotalFee }}</span>
-            </li>
-            <li>
-              {{ $t('wraps.feeType') }}：<span v-if="!isShowTypeFee">{{
-                $t('wraps.noData')
-              }}</span
-              ><span v-else>{{
-                changeForm.tokenType === 'ERC20' ? 'ERC20' : 'ONG'
-              }}</span>
-            </li>
-            <li>
-              {{ $t('wraps.totalTrans') }}：<span v-if="!TotalData">{{
-                $t('wraps.noData')
-              }}</span
-              ><span v-else>{{ TotalData }}</span>
-            </li>
-          </ul> -->
-          <!-- <span class="eye_icon"></span> -->
           <div class="table">
             <div class="table-tr">
               <div class="table-th">
                 <div class="data_ele">
-                  <span class="tbTitle">
-                    {{ $t('wraps.totalAmout') }}:
-                  </span>
-                  
+                  <span class="tbTitle"> {{ $t('wraps.totalAmout') }}: </span>
+
                   <span class="all_width" v-if="!TotalCoin">{{
                     $t('wraps.noData')
                   }}</span>
@@ -160,10 +124,8 @@
               </div>
               <div class="table-th">
                 <div class="data_ele">
-                  <span class="tbTitle">
-                    {{ $t('wraps.transFee') }}:
-                  </span>
-                  
+                  <span class="tbTitle"> {{ $t('wraps.transFee') }}: </span>
+
                   <span class="all_width" v-if="!TotalFee">{{
                     $t('wraps.noData')
                   }}</span>
@@ -172,10 +134,8 @@
               </div>
               <div class="table-th">
                 <div class="data_ele">
-                  <span class="tbTitle">
-                    {{ $t('wraps.feeType') }}:
-                  </span>
-                  
+                  <span class="tbTitle"> {{ $t('wraps.feeType') }}: </span>
+
                   <span class="all_width" v-if="!isShowTypeFee">{{
                     $t('wraps.noData')
                   }}</span>
@@ -186,10 +146,8 @@
               </div>
               <div class="table-th">
                 <div class="data_ele">
-                  <span class="tbTitle">
-                    {{ $t('wraps.totalTrans') }}:
-                  </span>
-                  
+                  <span class="tbTitle"> {{ $t('wraps.totalTrans') }}: </span>
+
                   <span class="all_width" v-if="!TotalData">{{
                     $t('wraps.noData')
                   }}</span>
@@ -197,21 +155,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="table-tr">  
-            <div class="table-td">广东</div>  
-            <div class="table-td">72812</div>  
-            <div class="table-td">8.0%</div>  
-        </div>  
-        <div class="table-tr">  
-            <div class="table-td">河南</div>  
-            <div class="table-td">37010</div>  
-            <div class="table-td">8.3%</div>  
-        </div>  
-        <div class="table-tr">  
-            <div class="table-td">江苏</div>  
-            <div class="table-td">70116</div>  
-            <div class="table-td">8.5%</div>  
-        </div>   -->
           </div>
         </div>
       </div>
@@ -294,7 +237,7 @@
               :key="key"
             >
               <div class="btype">{{ key }}: {{ item }}</div>
-              <span class="depl_btn" @click="withdrew(key)">
+              <span class="depl_btn" @click="withdrew(key, item)">
                 {{ $t('wraps.withDrew') }}</span
               >
             </div>
@@ -344,13 +287,15 @@ export default {
       eventTypeList: state => state.eventTypeList
     }),
     dataParams() {
+      let FormParams = { ...this.ruleForm }
+      FormParams.eventType = FormParams.eventType.trim()
       return {
         id: 1,
         jsonrpc: '2.0',
         method: 'uploadexecl',
         params: {
           billList: [...this.billList],
-          ...this.ruleForm,
+          ...FormParams,
           netType: this.netType
         }
       }
@@ -429,7 +374,13 @@ export default {
       this.fileName = ''
       this.$refs.upload.value = ''
     },
-    withdrew(data) {
+    withdrew(data, balance) {
+      if (balance == 0) {
+        return this.$message({
+          type: 'error',
+          message: 'Current balance is 0'
+        })
+      }
       this.withdrawData = {
         eventType: this.currentEvent,
         netType: this.netType,
@@ -739,14 +690,14 @@ export default {
         // border-bottom: 3px solid #000;
         position: relative;
         &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -1px;
-            width: 100%;
-            height: 3px;
-            background: #000;
-            border-radius: 1.5px;
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -1px;
+          width: 100%;
+          height: 3px;
+          background: #000;
+          border-radius: 1.5px;
         }
       }
       margin-bottom: 20px;
@@ -1134,7 +1085,7 @@ span.depl_btn {
   font-size: 14px;
   margin-bottom: 30px;
   padding-top: 20px;
-  color: rgba(0, 0, 0, 0.6);;
+  color: rgba(0, 0, 0, 0.6);
 }
 .history_ele {
   display: flex;

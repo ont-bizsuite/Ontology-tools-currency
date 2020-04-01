@@ -44,7 +44,8 @@ export default {
     failTrans: 'Failed transactions:',
     refer: 'Recommence distribution',
     adminBa: 'Balance',
-    exports: 'Export (xls.)'
+    exports: 'Export (xls.)',
+    termina: 'Terminate the transfer'
   },
   common: {
     evtStatus1: 'In progress',

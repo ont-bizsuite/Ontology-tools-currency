@@ -60,6 +60,13 @@
       <div class="search_area">
         <div
           :class="$i18n.locale === 'en' ? 'btns enwidth' : 'btns'"
+          @click="handlerTerm"
+          style="margin-right: 20px"
+        >
+          {{ $t('history.termina') }}
+        </div>
+        <div
+          :class="$i18n.locale === 'en' ? 'btns enwidth' : 'btns'"
           @click="handlerStart"
         >
           {{ $t('history.refer') }}
@@ -76,7 +83,7 @@
             <ul v-if="AdminBalance">
               <li v-for="(item, key) in AdminBalance" :key="key">
                 <div class="balance_area">{{ key }}: {{ item }}</div>
-                <div class="btn_balance" @click="withdrew(key)">
+                <div class="btn_balance" @click="withdrew(key, item)">
                   {{ $t('wraps.withDrew') }}
                 </div>
               </li>
@@ -369,7 +376,13 @@ export default {
       this.dialogFormVisible = params
       this.getBalance()
     },
-    withdrew(data) {
+    withdrew(data, balance) {
+      if (balance == 0) {
+        return this.$message({
+          type: 'error',
+          message: 'Current balance is 0'
+        })
+      }
       this.withdrawData = {
         eventType: this.currentEvent,
         netType: this.netType,
@@ -523,6 +536,45 @@ export default {
     doCopy(m) {
       this.$copyText(m)
       this.$message.success('copied')
+    },
+    async handlerTerm() {
+      if (!this.currentEvent) {
+        return this.$message({
+          type: 'error',
+          message: 'Please select event name'
+        })
+      }
+
+      let params = {
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'transfer',
+        params: {
+          eventType: this.currentEvent,
+          netType: this.netType
+        }
+      }
+      try {
+        let apires = await this.$http.terminTer(params)
+        console.log(apires)
+        const { Desc, Error, Result } = apires
+
+        if (Desc !== 'SUCCESS' && Error !== 1) {
+          return this.$message({
+            type: 'error',
+            message: Desc
+          })
+        }
+        this.$message({
+          type: 'warning',
+          message: 'Transfer terminated'
+        })
+      } catch (error) {
+        return this.$message({
+          type: 'error',
+          message: error
+        })
+      }
     }
   },
   filters: {

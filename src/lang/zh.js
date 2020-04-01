@@ -44,7 +44,8 @@ export default {
     failTrans: '交易失败：',
     refer: '重新执行',
     adminBa: '管理员地址余额',
-    exports: '导出 Excel'
+    exports: '导出 Excel',
+    termina: '终止转账'
   },
   common: {
     evtStatus1: '执行中',

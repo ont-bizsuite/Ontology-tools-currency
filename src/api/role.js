@@ -72,3 +72,11 @@ export function getHistoryInfo(data) {
     method: 'GET'
   })
 }
+
+export function terminTer(data) {
+  return request({
+    url: '/api/v1/stop',
+    method: 'post',
+    data
+  })
+}
