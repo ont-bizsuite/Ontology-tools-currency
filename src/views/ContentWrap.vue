@@ -318,10 +318,10 @@ export default {
           {
             min: 2,
             max: 18,
-            pattern: /^[\S][^_]{2,18}$/,
+            pattern: /^[^\ \_]{2,18}$/,
             required: true,
             message:
-              '2 to 18 characters, cannot be empty and contain no underscores!',
+              '2 to 18 characters, spaces and underscores are not allowed!',
             trigger: 'change'
           }
         ],
@@ -449,11 +449,13 @@ export default {
 
           that.billList = [] //清空接收数据
           for (var i = 0; i < ws.length; i++) {
-            var sheetData = {
-              address: ws[i].address,
-              amount: ws[i].amount
+            if (ws[i].address && ws[i].amount) {
+              var sheetData = {
+                address: ws[i].address,
+                amount: ws[i].amount
+              }
+              that.billList.push(sheetData)
             }
-            that.billList.push(sheetData)
           }
 
           that.billList.map(value => {

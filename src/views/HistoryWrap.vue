@@ -30,6 +30,9 @@
           <div class="btype" v-else-if="transPro.evtStatus === 2">
             {{ $t('common.evtStatus2') }}
           </div>
+          <div class="btype" v-else-if="transPro.evtStatus === 3">
+            {{ $t('common.evtStatus4') }}
+          </div>
           <div class="btype" v-else-if="transPro.evtStatus === 0">
             {{ $t('common.evtStatus3') }}
           </div>
@@ -54,7 +57,7 @@
           {{ $t('history.successsTras') }}<span>{{ transPro.success }}</span>
         </li>
         <li>
-          {{ $t('history.failTrans') }}<span>{{ transPro.failed }}</span>
+          {{ $t('history.failTrans') }}<span>{{ transPro.failed + transPro.sendFailed }}</span>
         </li>
       </ul>
       <div class="search_area">
@@ -414,6 +417,7 @@ export default {
           message: 'Please select event name'
         })
       }
+      this.currentPage = 1
       try {
         let apires = await this.$http.queryTransferProgress({
           eventType: this.currentEvent,
@@ -565,6 +569,7 @@ export default {
             message: Desc
           })
         }
+        this.queryTransPro()
         this.$message({
           type: 'warning',
           message: 'Transfer terminated'

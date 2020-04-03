@@ -51,6 +51,7 @@ export default {
     evtStatus1: '执行中',
     evtStatus2: '已完成',
     evtStatus3: '未开始',
+    evtStatus4: '终止中',
     allStatus: '所有状态',
     notGener: '未构造交易',
     generFail: '构造交易失败',

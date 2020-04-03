@@ -51,6 +51,7 @@ export default {
     evtStatus1: 'In progress',
     evtStatus2: 'Done',
     evtStatus3: 'Not started',
+    evtStatus4: 'Terminating',
     allStatus: 'All',
     notGener: 'Transactions not generated',
     generFail: 'Failed to generate transaction',
