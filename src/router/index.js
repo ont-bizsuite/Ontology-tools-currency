@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -13,16 +13,16 @@ const routes = [
     name: 'ContentWrap',
     component: () => import('../views/ContentWrap.vue')
   },
-  {
-    path: '/search',
-    name: 'search',
-    component: () => import('../views/Search.vue')
-  },
-  {
-    path: '/layout',
-    name: 'Layout',
-    component: () => import('../views/Layout.vue')
-  },
+  // {
+  //   path: '/search',
+  //   name: 'search',
+  //   component: () => import('../views/Search.vue')
+  // },
+  // {
+  //   path: '/layout',
+  //   name: 'Layout',
+  //   component: () => import('../views/Layout.vue')
+  // },
   {
     path: '/history',
     name: 'HistoryWrap',

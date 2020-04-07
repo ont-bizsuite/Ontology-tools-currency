@@ -318,10 +318,10 @@ export default {
           {
             min: 2,
             max: 18,
-            pattern: /^[^\ \_]{2,18}$/,
+            pattern: /^[^\ \_\\\/]{2,18}$/,
             required: true,
             message:
-              '2 to 18 characters, spaces and underscores are not allowed!',
+              '2 to 18 characters, cannot contain "/", "\", "_" or spaces',
             trigger: 'change'
           }
         ],
