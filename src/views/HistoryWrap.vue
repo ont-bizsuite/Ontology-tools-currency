@@ -7,7 +7,7 @@
           <el-select
             v-model="currentEvent"
             filterable
-            placeholder="Please select event name"
+            :placeholder="$t('common.selectEv')"
           >
             <el-option
               v-for="item in eventTypeList"
@@ -184,7 +184,7 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="TxHash" label="Txhash" width="150">
+        <el-table-column prop="TxHash" label="Transaction Hash" width="150">
           <template slot-scope="scope">
             {{ scope.row.TxHash | subStr }}
             <i
@@ -263,12 +263,12 @@ import moment from 'moment'
 import { export_json_to_excel } from '../assets/js/Export2Excel'
 
 const actions = new Map([
-  [1, ['Failed to generate transaction']],
-  [2, ['Failed transfers']],
+  [1, ['Failed to process transaction']],
+  [2, ['Transfer failed ']],
   [3, ['In progress']],
-  [4, ['Failed transactions']],
-  [5, ['Confirmed transactions']],
-  ['default', ['Transactions not generated']]
+  [4, ['Transaction failed ']],
+  [5, ['Confirmed transaction']],
+  ['default', ['Transaction not generated']]
 ])
 const filterAction = status => {
   let action = actions.get(status) || actions.get('default')
@@ -468,7 +468,7 @@ export default {
         }
         return this.$message({
           type: 'success',
-          message: 'Transfer started'
+          message: 'Transfer initiated'
         })
       } catch (error) {
         this.$message({
@@ -539,7 +539,7 @@ export default {
     },
     doCopy(m) {
       this.$copyText(m)
-      this.$message.success('copied')
+      this.$message.success('Copied!')
     },
     async handlerTerm() {
       if (!this.currentEvent) {

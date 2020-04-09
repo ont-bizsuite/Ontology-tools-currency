@@ -58,7 +58,7 @@
             @change="handlerChanges"
             v-model="currentEvent"
             filterable
-            placeholder="Please select history event name"
+            :placeholder="$t('common.selectEv')"
             clearable
             @clear="clearSelect"
           >
@@ -321,7 +321,7 @@ export default {
             pattern: /^[^\ \_\\\/]{2,18}$/,
             required: true,
             message:
-              '2 to 18 characters, cannot contain "/", "\", "_" or spaces',
+              '2 to 18 characters, cannot contain "/", " ", "_" or spaces',
             trigger: 'change'
           }
         ],
@@ -431,7 +431,7 @@ export default {
         return false
       } else if (!/\.(xls|xlsx)$/.test(files[0].name.toLowerCase())) {
         this.$Message.error(
-          'The upload format is incorrect. Please upload a file in xls or xlsx format!'
+          'The file format is incorrect. Please upload a file in xls or xlsx format!'
         )
         return false
       }
@@ -506,7 +506,7 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize
         })
-        return this.$message.success('Uploaded successfully!')
+        return this.$message.success('Upload success!')
       } catch (error) {
         this.fullscreenLoading = false
       }
@@ -604,7 +604,7 @@ export default {
       if (!this.changeForm.eventType) {
         return this.$message({
           type: 'error',
-          message: 'Please upload data or select history event'
+          message: 'Please upload data or select event'
         })
       }
       let params = {
@@ -634,7 +634,7 @@ export default {
         this.$router.push({ name: 'HistoryWrap' })
         return this.$message({
           type: 'success',
-          message: 'Transfer started'
+          message: 'Transfer initiated'
         })
       } catch (error) {
         this.fullscreenLoading = false

@@ -2,14 +2,14 @@ export default {
   home: 'Bifröst - 区块链批量转账工具 v2.0',
   layout: {
     nav1: '代币发放',
-    nav2: '历史记录'
+    nav2: '历史记录',
   },
   wraps: {
     oneTips: '请填写本次发放任务的基本信息',
     enentName: '任务名称',
     tokenType: '发放币种',
     contr: '代币合约地址',
-    coinPlace: '-- 选择币种 --',
+    coinPlace: '选择币种',
     twoTips: '请上传发放明细文件',
     template: '发放明细模板',
     filePlace: '浏览文件（xsl, xlsx）',
@@ -28,13 +28,13 @@ export default {
     withDrew: '提取余额',
     startTrans: '开始转账',
     orTip: '或者选择已有数据',
-    orTitle: '历史事件数据'
+    orTitle: '历史事件数据',
   },
   dialog: {
     mainTitle: '提取余额',
     subTitle: '请输入地址',
     confirm: '确 定',
-    cancal: '取 消'
+    cancal: '取 消',
   },
   history: {
     status: '状态',
@@ -45,7 +45,7 @@ export default {
     refer: '重新执行',
     adminBa: '管理员地址余额',
     exports: '导出 Excel',
-    termina: '终止转账'
+    termina: '终止转账',
   },
   common: {
     evtStatus1: '执行中',
@@ -58,6 +58,7 @@ export default {
     sendFail: '发送失败',
     inpro: '转账进行中',
     failSend: '交易失败',
-    sucSend: '交易成功'
-  }
+    sucSend: '交易成功',
+    selectEv: '选择事件',
+  },
 }

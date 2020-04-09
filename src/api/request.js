@@ -38,7 +38,7 @@ service.interceptors.response.use(
         Message({ message: rest.data.desc, type: 'error' })
       }
     } else {
-      Message({ message: 'Api Error, Please Try Again!', type: 'error' })
+      Message({ message: 'API error, please try again!', type: 'error' })
     }
     return Promise.reject(error)
   }
