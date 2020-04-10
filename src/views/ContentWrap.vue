@@ -321,7 +321,7 @@ export default {
             pattern: /^[^\ \_\\\/]{2,18}$/,
             required: true,
             message:
-              '2 to 18 characters, cannot contain "/", " ", "_" or spaces',
+              '2 to 18 characters, cannot contain "/","\\", " ", "_" or spaces',
             trigger: 'change'
           }
         ],
