@@ -13,7 +13,7 @@
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "file-saver": "^2.0.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "nprogress": "^0.2.0",
     "vue": "^2.6.10",
     "vue-clipboard2": "^0.3.1",
